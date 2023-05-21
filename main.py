@@ -13,7 +13,6 @@ from utilities import save_error
 from utilities import SteamAchievements
 from utilities import surface_to_texture
 
-
 LOGGER = logging.getLogger(__file__)
 DEBUG = True  # TODO: set this to False for release
 __version__ = "v0.0.0"
@@ -47,6 +46,7 @@ def main(winstyle=0):
     # game.sound_attribution = SoundAttribution()
 
     game.texID = init_open_gl(generate_tex_id=True)
+    game.draw_grid(4, 400, 400)
 
     try:
         while True:
