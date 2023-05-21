@@ -1,21 +1,23 @@
+import logging
+
 import OpenGL  # noqa: F401  # Needed for nuitka compile
 import pygame
-import logging
+
 from game import Game
 from steamworks import STEAMWORKS
-
-from utilities import SteamAchievements
 from utilities import catch_error
 from utilities import draw_open_gl
+from utilities import handle_input
 from utilities import init_open_gl
 from utilities import save_error
+from utilities import SteamAchievements
 from utilities import surface_to_texture
-from utilities import handle_input
 
 
 LOGGER = logging.getLogger(__file__)
 DEBUG = True  # TODO: set this to False for release
 __version__ = "v0.0.0"
+
 
 def main(winstyle=0):
     game = Game(__version__, DEBUG)

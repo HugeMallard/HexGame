@@ -3,8 +3,8 @@ from enum import Enum
 
 import steamworks.util as util
 from steamworks.enums import *
-from steamworks.structs import *
 from steamworks.exceptions import *
+from steamworks.structs import *
 
 
 class SteamFriends(object):

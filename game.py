@@ -1,19 +1,22 @@
 import pygame
-from pygame.locals import OPENGL, DOUBLEBUF
-from utilities import setup_gl
-from constants import DEFAULT_RESOLUTION
+from pygame.locals import DOUBLEBUF
+from pygame.locals import OPENGL
+
 from constants import DEFAULT_FRAME_RATE
 from constants import DEFAULT_FULLSCREEN
+from constants import DEFAULT_RESOLUTION
 from utilities import ControlConfiguration
+from utilities import setup_gl
+
 
 class Game(object):
-    
+
     screen = None
     fullscreen = DEFAULT_FULLSCREEN
     frame_rate = DEFAULT_FRAME_RATE
     winstyle = 1 | OPENGL | DOUBLEBUF
     resolution = DEFAULT_RESOLUTION
-    
+
     def __init__(self, version, debug):
         self.version = version
         self.debug = debug
@@ -23,7 +26,7 @@ class Game(object):
         self.screen.fill((0, 0, 0))
         self.background = background
         self.control_config = ControlConfiguration()
-    
+
     def draw_screen(self):
         if self.fullscreen:
             winstyle = self.winstyle | pygame.FULLSCREEN

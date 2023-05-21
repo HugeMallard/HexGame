@@ -2,14 +2,14 @@ from enum import Enum
 
 
 class Arch(Enum):
-    """ Limited list of processor architectures """
+    """Limited list of processor architectures"""
 
     x86 = 0
     x64 = 1
 
 
 class FriendFlags(Enum):
-    """ EFriendFlags """
+    """EFriendFlags"""
 
     NONE = 0x00
     BLOCKED = 0x01
@@ -45,7 +45,7 @@ class EWorkshopFileType(Enum):
 
 
 class EItemState(Enum):
-    """ EItemState """
+    """EItemState"""
 
     NONE = 0
     SUBSCRIBED = 1

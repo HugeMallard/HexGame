@@ -1,6 +1,8 @@
-import pygame
-from constants import KEY_NAV
 from typing import Any
+
+import pygame
+
+from constants import KEY_NAV
 
 
 def handle_input(game: Any) -> bool:

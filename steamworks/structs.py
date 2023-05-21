@@ -2,7 +2,7 @@ from ctypes import *
 
 
 class FindLeaderboardResult_t(Structure):
-    """ Represents the STEAMWORKS LeaderboardFindResult_t call result type """
+    """Represents the STEAMWORKS LeaderboardFindResult_t call result type"""
 
     _fields_ = [("leaderboardHandle", c_uint64), ("leaderboardFound", c_uint32)]
 

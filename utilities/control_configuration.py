@@ -1,5 +1,7 @@
-import pygame
 from copy import deepcopy
+
+import pygame
+
 KEYBOARD = "keyboard"
 MOUSE = "mouse"
 
@@ -7,7 +9,7 @@ MOUSE = "mouse"
 class ControlConfiguration(object):
     def __init__(self):
         self.config = deepcopy(self.default_config)
-        
+
     @property
     def keyboard_controls(self):
         return self.config[KEYBOARD]
@@ -15,7 +17,7 @@ class ControlConfiguration(object):
     @property
     def mouse_controls(self):
         return self.config[MOUSE]
-    
+
     default_config = dict(
         keyboard=dict(
             # Keys
