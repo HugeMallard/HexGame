@@ -1,4 +1,6 @@
 from typing import Any
+from typing import List
+from typing import Optional
 
 import pygame
 
@@ -7,81 +9,82 @@ from constants import KEY_NAV
 
 def handle_input(game: Any) -> bool:
     key_con = game.control_config.keyboard_controls
-    # joy_con = game.control_config.joystick_controls
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            return False
-        if event.type == pygame.KEYDOWN and game.control_config.wait_for_key:
-            game.control_config.update_key(event.key)
-            continue
-        elif event.type == pygame.KEYDOWN and event.key == key_con["MENU"]:
-            if game.game_started:
-                if not game.paused:
-                    game.pause()
-            elif game.showing_intro:
-                game.navigate_menu(KEY_NAV.ESC)
-        elif event.type == pygame.KEYDOWN:
-            if event.key == key_con["FULLSCREEN"] and not game.showing_intro:
-                game.toggle_fullscreen()
-            if event.key == pygame.K_t:
-                game.kill_enemies()
-            if event.key == pygame.K_h:
-                game.reset_player_health()
-            if event.key == pygame.K_k:
-                game.kill_player()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            game.ui_manager.check_clicks(event.pos)
-        elif event.type == pygame.JOYBUTTONDOWN:
-            if event.button == joy_con["MENU"]:
-                if game.game_started:
-                    if not game.paused:
-                        game.pause()
-                elif game.showing_intro:
-                    game.navigate_menu(KEY_NAV.ESC)
-            if event.button == joy_con["BACK"]:
-                game.ui_manager.check_clicks([0, 0])
-
-        # If game is started and not paused, no need to process menu input
-        # if (game.game_started or game.showing_intro) and not game.paused:
-        #     continue
-
-        show_cursor = False
-        # Controls for menus
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                game.navigate_menu(KEY_NAV.UP)
-            if event.key == pygame.K_DOWN:
-                game.navigate_menu(KEY_NAV.DOWN)
-            if event.key == pygame.K_LEFT:
-                game.navigate_menu(KEY_NAV.LEFT)
-            if event.key == pygame.K_RIGHT:
-                game.navigate_menu(KEY_NAV.RIGHT)
-            if event.key == pygame.K_RETURN:
-                game.navigate_menu(KEY_NAV.RETURN)
-            if event.key == pygame.K_ESCAPE:
-                game.navigate_menu(KEY_NAV.ESC)
-        elif event.type == pygame.JOYBUTTONDOWN:
-            if event.button == joy_con["ACCEPT"]:
-                game.navigate_menu(KEY_NAV.RETURN)
-            if event.button in [joy_con["MENU"]]:
-                game.navigate_menu(KEY_NAV.ESC)
-        elif event.type == pygame.JOYHATMOTION:
-            if event.value[0] < 0:
-                game.navigate_menu(KEY_NAV.LEFT)
-            if event.value[0] > 0:
-                game.navigate_menu(KEY_NAV.RIGHT)
-            if event.value[1] > 0:
-                game.navigate_menu(KEY_NAV.UP)
-            if event.value[1] < 0:
-                game.navigate_menu(KEY_NAV.DOWN)
-        else:
-            show_cursor = True
-        pygame.mouse.set_visible(show_cursor)
-
-    if hasattr(game, "player"):
-        game.player.check_keystates()
-
     return True
+    # joy_con = game.control_config.joystick_controls
+    # for event in pygame.event.get():
+    #     if event.type == pygame.QUIT:
+    #         return False
+    #     if event.type == pygame.KEYDOWN and game.control_config.wait_for_key:
+    #         game.control_config.update_key(event.key)
+    #         continue
+    #     elif event.type == pygame.KEYDOWN and event.key == key_con["MENU"]:
+    #         if game.game_started:
+    #             if not game.paused:
+    #                 game.pause()
+    #         elif game.showing_intro:
+    #             game.navigate_menu(KEY_NAV.ESC)
+    #     elif event.type == pygame.KEYDOWN:
+    #         if event.key == key_con["FULLSCREEN"] and not game.showing_intro:
+    #             game.toggle_fullscreen()
+    #         if event.key == pygame.K_t:
+    #             game.kill_enemies()
+    #         if event.key == pygame.K_h:
+    #             game.reset_player_health()
+    #         if event.key == pygame.K_k:
+    #             game.kill_player()
+    #     elif event.type == pygame.MOUSEBUTTONDOWN:
+    #         game.ui_manager.check_clicks(event.pos)
+    #     elif event.type == pygame.JOYBUTTONDOWN:
+    #         if event.button == joy_con["MENU"]:
+    #             if game.game_started:
+    #                 if not game.paused:
+    #                     game.pause()
+    #             elif game.showing_intro:
+    #                 game.navigate_menu(KEY_NAV.ESC)
+    #         if event.button == joy_con["BACK"]:
+    #             game.ui_manager.check_clicks([0, 0])
+
+    #     # If game is started and not paused, no need to process menu input
+    #     # if (game.game_started or game.showing_intro) and not game.paused:
+    #     #     continue
+
+    #     show_cursor = False
+    #     # Controls for menus
+    #     if event.type == pygame.KEYDOWN:
+    #         if event.key == pygame.K_UP:
+    #             game.navigate_menu(KEY_NAV.UP)
+    #         if event.key == pygame.K_DOWN:
+    #             game.navigate_menu(KEY_NAV.DOWN)
+    #         if event.key == pygame.K_LEFT:
+    #             game.navigate_menu(KEY_NAV.LEFT)
+    #         if event.key == pygame.K_RIGHT:
+    #             game.navigate_menu(KEY_NAV.RIGHT)
+    #         if event.key == pygame.K_RETURN:
+    #             game.navigate_menu(KEY_NAV.RETURN)
+    #         if event.key == pygame.K_ESCAPE:
+    #             game.navigate_menu(KEY_NAV.ESC)
+    #     elif event.type == pygame.JOYBUTTONDOWN:
+    #         if event.button == joy_con["ACCEPT"]:
+    #             game.navigate_menu(KEY_NAV.RETURN)
+    #         if event.button in [joy_con["MENU"]]:
+    #             game.navigate_menu(KEY_NAV.ESC)
+    #     elif event.type == pygame.JOYHATMOTION:
+    #         if event.value[0] < 0:
+    #             game.navigate_menu(KEY_NAV.LEFT)
+    #         if event.value[0] > 0:
+    #             game.navigate_menu(KEY_NAV.RIGHT)
+    #         if event.value[1] > 0:
+    #             game.navigate_menu(KEY_NAV.UP)
+    #         if event.value[1] < 0:
+    #             game.navigate_menu(KEY_NAV.DOWN)
+    #     else:
+    #         show_cursor = True
+    #     pygame.mouse.set_visible(show_cursor)
+
+    # if hasattr(game, "player"):
+    #     game.player.check_keystates()
+
+    # return True
 
 
 class UIManager(object):
@@ -90,7 +93,7 @@ class UIManager(object):
     Pass all buttons on screen and this class will check if they have been clicked
     """
 
-    def __init__(self, game, buttons=None):
+    def __init__(self, game: Any, buttons: Optional[List[Any]] = None):
         self.game = game
         self.buttons = buttons or []
         self.selected_button = self.buttons[0] if len(self.buttons) > 0 else None
@@ -98,22 +101,22 @@ class UIManager(object):
         self.cursor_pos = pygame.mouse.get_pos()
         self.previous_cursor_pos = self.cursor_pos
 
-    def add_button(self, button):
+    def add_button(self, button: int) -> None:
         self.buttons.append(button)
 
     @property
-    def index(self):
+    def index(self) -> int:
         if self.selected_button in self.buttons:
             return self.buttons.index(self.selected_button)
         return 0
 
-    def check_clicks(self, cursor_pos):
+    def check_clicks(self, cursor_pos: List[float]) -> None:
         for button in self.buttons:
             if button.rect.collidepoint(cursor_pos):
                 button.run_callback()
                 return
 
-    def check_mouse_over(self, cursor_pos):
+    def check_mouse_over(self, cursor_pos: List[float]) -> None:
         if cursor_pos == self.previous_cursor_pos:
             return
         self.previous_cursor_pos = cursor_pos
@@ -126,7 +129,7 @@ class UIManager(object):
             elif not button.hold_hover:
                 button.reset_hover()
 
-    def change_selected_button(self):
+    def change_selected_button(self) -> None:
         for button in self.buttons:
             if not button.alive():
                 continue
@@ -134,7 +137,7 @@ class UIManager(object):
                 self.selected_button = button
                 break
 
-    def flush_buttons(self):
+    def flush_buttons(self) -> None:
         buttons_to_remove = []
         for button in self.buttons:
             if not button.alive():
@@ -146,7 +149,7 @@ class UIManager(object):
             self.buttons.remove(button)
             del button
 
-    def update(self):
+    def update(self) -> None:
         self.flush_buttons()
         cursor_pos = pygame.mouse.get_pos()
         self.check_mouse_over(cursor_pos)
@@ -158,7 +161,7 @@ class UIManager(object):
                 if button != self.selected_button:
                     button.reset_hover()
 
-    def navigate_menu(self, key_press):
+    def navigate_menu(self, key_press: str) -> None:
         selected_button = self.selected_button
         if not self.buttons:
             return

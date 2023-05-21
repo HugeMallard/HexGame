@@ -3,6 +3,7 @@ import os
 import traceback
 from datetime import datetime
 from shutil import copyfile
+from typing import Any
 
 import pygame
 
@@ -13,7 +14,7 @@ LOGGER = logging.getLogger(__file__)
 error_dir = "error_saves"
 
 
-def catch_error():
+def catch_error() -> str:
     if not os.path.isdir(error_dir):
         os.makedirs(error_dir)
     now = datetime.now()
@@ -24,7 +25,7 @@ def catch_error():
     return dt_string
 
 
-def save_error(dt_string, screen):
+def save_error(dt_string: str, screen: Any) -> None:
     out_file_name = os.path.join(error_dir, f"{dt_string}_error_trace.txt")
     with open(out_file_name, "w") as out_file:
         traceback.print_exc(file=out_file)

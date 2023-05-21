@@ -18,7 +18,7 @@ DEBUG = True  # TODO: set this to False for release
 __version__ = "v0.0.0"
 
 
-def main(winstyle=0):
+def main(winstyle: int = 0) -> None:
     game = Game(__version__, DEBUG)
 
     # Try to initialise steamworks

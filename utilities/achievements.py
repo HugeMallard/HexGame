@@ -1,3 +1,7 @@
+from typing import Any
+from typing import List
+
+
 class SteamAchievements(object):
     achievements = [
         dict(id=0, api_name="UNLOCK_SIDEWINDER", unlock_id=2, unlock_type="ship"),
@@ -29,34 +33,34 @@ class SteamAchievements(object):
     ]
 
     @property
-    def achievement_names(self):
+    def achievement_names(self) -> List[object]:
         return [a["api_name"] for a in self.achievements]
 
-    def ship_id_to_name(self, unlock_id):
+    def ship_id_to_name(self, unlock_id: int) -> object:
         ships = [s for s in self.achievements if s["unlock_type"] == "ship"]
         for ship in ships:
             if ship["unlock_id"] == unlock_id:
                 return ship["api_name"]
-        return None
+        return {}
 
-    def modifier_id_to_name(self, unlock_id):
+    def modifier_id_to_name(self, unlock_id: int) -> object:
         modifiers = [m for m in self.achievements if m["unlock_type"] == "asset"]
         for modifier in modifiers:
             if modifier["unlock_id"] == unlock_id:
                 return modifier["api_name"]
-        return None
+        return {}
 
-    def game_stat_id_to_name(self, unlock_id):
+    def game_stat_id_to_name(self, unlock_id: int) -> object:
         game_stats = [g for g in self.achievements if g["unlock_type"] == "game_stat"]
         for game_stat in game_stats:
             if game_stat["unlock_id"] == unlock_id:
                 return game_stat["api_name"]
-        return None
+        return {}
 
-    def __init__(self, game):
+    def __init__(self, game: Any):
         self.game = game
 
-    def check_steam_achievements(self):
+    def check_steam_achievements(self) -> None:
         if not self.game.steamworks_initialised:
             return
 
@@ -64,7 +68,7 @@ class SteamAchievements(object):
             unlocked = self.game.steamworks.GetAchievement(achievement_name)
             print(f"Unlocked {achievement_name}: {unlocked}")
 
-    def unlock_steam_achievement(self, api_name):
+    def unlock_steam_achievement(self, api_name: str) -> Any:
         if not self.game.steamworks_initialised:
             return
         name = str.encode(api_name)

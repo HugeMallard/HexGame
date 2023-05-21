@@ -1,8 +1,11 @@
+from typing import Any
+from typing import Optional
+
 from OpenGL import GL
 
 
 # basic openGL.gl configuration
-def setup_gl(width, height):
+def setup_gl(width: int, height: int) -> None:
     GL.glViewport(0, 0, width, height)
     GL.glDepthRange(0, 1)
     GL.glMatrixMode(GL.GL_PROJECTION)
@@ -18,7 +21,7 @@ def setup_gl(width, height):
     GL.glEnable(GL.GL_BLEND)
 
 
-def init_open_gl(generate_tex_id=False):
+def init_open_gl(generate_tex_id: bool = False) -> Optional[Any]:
     GL.glClear(GL.GL_COLOR_BUFFER_BIT)
     GL.glLoadIdentity()
     GL.glDisable(GL.GL_LIGHTING)
@@ -29,7 +32,7 @@ def init_open_gl(generate_tex_id=False):
     return None
 
 
-def surface_to_texture(pygame_surface, texID):
+def surface_to_texture(pygame_surface: Any, texID: Any) -> None:
     w, h = pygame_surface.get_size()
     GL.glBindTexture(GL.GL_TEXTURE_2D, texID)
     GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
@@ -52,7 +55,7 @@ def surface_to_texture(pygame_surface, texID):
     GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
 
 
-def draw_open_gl(texID):
+def draw_open_gl(texID: Any) -> None:
     GL.glBindTexture(GL.GL_TEXTURE_2D, texID)
     GL.glBegin(GL.GL_QUADS)
     GL.glTexCoord2f(0, 0)

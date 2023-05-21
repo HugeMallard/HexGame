@@ -7,15 +7,15 @@ MOUSE = "mouse"
 
 
 class ControlConfiguration(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self.config = deepcopy(self.default_config)
 
     @property
-    def keyboard_controls(self):
+    def keyboard_controls(self) -> object:
         return self.config[KEYBOARD]
 
     @property
-    def mouse_controls(self):
+    def mouse_controls(self) -> object:
         return self.config[MOUSE]
 
     default_config = dict(

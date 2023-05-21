@@ -1,3 +1,5 @@
+from typing import Any
+
 import pygame
 from pygame.locals import DOUBLEBUF
 from pygame.locals import OPENGL
@@ -5,22 +7,24 @@ from pygame.locals import OPENGL
 from constants import DEFAULT_FRAME_RATE
 from constants import DEFAULT_FULLSCREEN
 from constants import DEFAULT_RESOLUTION
+from load_asset import AssetPreloader
+from sprites import Grid
 from utilities import ControlConfiguration
 from utilities import setup_gl
-from sprites import Grid
-from load_asset import AssetPreloader
 
 
 class Game(object):
 
-    screen = None
-    grid = None
+    texID: Any = None
+    steamworks: Any = None
+    steam_achievements: Any = None
+    steamworks_initialised: Any = None
     fullscreen = DEFAULT_FULLSCREEN
     frame_rate = DEFAULT_FRAME_RATE
     winstyle = 1 | OPENGL | DOUBLEBUF
     resolution = DEFAULT_RESOLUTION
 
-    def __init__(self, version, debug):
+    def __init__(self, version: str, debug: bool):
         self.isr = 1
         self.version = version
         self.debug = debug
@@ -35,7 +39,7 @@ class Game(object):
         if self.debug:
             self.asset_preloader.load()
 
-    def draw_screen(self):
+    def draw_screen(self) -> None:
         if self.fullscreen:
             winstyle = self.winstyle | pygame.FULLSCREEN
         else:
@@ -44,6 +48,6 @@ class Game(object):
         pygame.display.set_mode(self.SCREENRECT.size, winstyle)
         self.screen = pygame.Surface(self.SCREENRECT.size)
         setup_gl(self.SCREENRECT.size[0], self.SCREENRECT.size[1])
-        
-    def draw_grid(self, size: int, max_pix_x: int, max_pix_y: int):
-        self.grid = Grid(size, max_pix_x, max_pix_y)
+
+    def draw_grid(self, size: int, max_pix_x: int, max_pix_y: int) -> None:
+        self.grid = Grid(self, size, [max_pix_x, max_pix_y])
