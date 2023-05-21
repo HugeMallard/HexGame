@@ -1,38 +1,56 @@
 import pytest
+from constants import Size
 from logic import BOT_RIGHT
-from logic import Cube
+from logic import Grid
 from logic import GridObject
+from logic import Hex
 
 
-def test_cube_creation() -> None:
+def test_hex_creation() -> None:
     q = 2
     r = 2
     s = -4
 
-    cube = Cube(q, r, s)
-    assert cube.self_coord_check is True
+    hex = Hex(q, r, s)
+    assert hex.self_coord_check is True
 
     s = -3
     with pytest.raises(AssertionError):  # type: ignore
-        cube = Cube(q, r, s)
-        assert cube.self_coord_check is False
+        hex = Hex(q, r, s)
+        assert hex.self_coord_check is False
 
 
 def test_grid_helper_methods() -> None:
-    cube_one = BOT_RIGHT
-    cube_two = Cube(1, 1, -2)
-    cube_three = Cube(-1, -1, +2)  # Diagonal vector
+    hex_one = BOT_RIGHT
+    hex_two = Hex(1, 1, -2)
+    hex_three = Hex(-1, -1, +2)  # Diagonal vector
 
-    assert GridObject.coord_check(cube_one) is True
-    assert GridObject.coord_check(cube_two) is True
+    assert GridObject.coord_check(hex_one) is True
+    assert GridObject.coord_check(hex_two) is True
 
-    cube_add = GridObject.cube_add(cube_one, cube_two)
-    assert cube_add == Cube(1, 2, -3)
+    hex_add = GridObject.hex_add(hex_one, hex_two)
+    assert hex_add == Hex(1, 2, -3)
 
-    assert GridObject.cube_neighbor(cube_two, 4) == cube_add
+    assert GridObject.hex_neighbor(hex_two, 4) == hex_add
 
     # Test diagonal
-    cube_add = GridObject.cube_add(cube_two, cube_three)
-    assert cube_add == Cube(0, 0, 0)
+    hex_add = GridObject.hex_add(hex_two, hex_three)
+    assert hex_add == Hex(0, 0, 0)
 
-    assert GridObject.cube_diagonal_neighbor(cube_add, 0) == cube_three
+    assert GridObject.hex_diagonal_neighbor(hex_add, 0) == hex_three
+
+
+@pytest.mark.parametrize(  # type: ignore
+    "size,x,y,side",
+    [
+        (2, 300, 300, 17),
+        (1, 300, 300, 28),
+        (3, 600, 200, 18),
+        (5, 900, 700, 23),
+        (0, 900, 900, 259),
+    ],
+)
+def test_grid_generation(size: int, x: int, y: int, side: int) -> None:
+    grid = Grid(size, Size(x, y))
+
+    assert grid.cell_side_length == side

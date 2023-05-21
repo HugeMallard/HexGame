@@ -1,5 +1,5 @@
-from typing import List
 from typing import Optional
+from typing import Tuple
 
 import pygame
 from PIL import Image
@@ -18,7 +18,7 @@ def resize_image_by_scale(img: Image, scale_ratio: float = 1.5) -> Image:
     ).convert_alpha()
 
 
-def resize_image(img: Image, size: List[int]) -> Image:
+def resize_image(img: Image, size: Tuple[int, int]) -> Image:
     if img.get_width() == size[0] and img.get_height() == size[1]:
         return img
     image_string = pygame.image.tostring(img, "RGBA", False)
@@ -32,13 +32,13 @@ def resize_image(img: Image, size: List[int]) -> Image:
 def scale_and_rotate_image(
     img: Image,
     ratio: float,
-    size: Optional[List[int]] = None,
+    size: Optional[Tuple[int, int]] = None,
     rotation: int = 0,
     force_size: bool = False,
 ) -> Image:
     if size:
         scale = size if force_size else [int(size[0] * ratio), int(size[1] * ratio)]
-        img = resize_image(img, scale)
+        img = resize_image(img, scale)  # type: ignore
     else:
         img = img.convert_alpha()
 

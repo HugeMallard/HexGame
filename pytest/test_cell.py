@@ -1,5 +1,4 @@
 import pytest
-from game import Game
 from sprites import Cell
 
 
@@ -16,8 +15,7 @@ from sprites import Cell
     ],
 )
 def test_cell_pixel_methods(q: int, r: int, s: int, l: int, x: int, y: int) -> None:
-    game = Game("test", True)
-    cell = Cell(game, q, r, s, l)
+    cell = Cell(q, r, s, l)
     cell_centre = cell.centre_in_pixels
-    assert cell_centre[0] == x
-    assert cell_centre[1] == y
+    assert cell_centre.x == x
+    assert cell_centre.y == y

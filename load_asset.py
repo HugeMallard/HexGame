@@ -7,9 +7,11 @@ from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 import pygame
 from PIL import Image
+from PIL.Image import Image as Img
 
 from utilities import resize_image_by_scale
 from utilities import scale_and_rotate_image
@@ -101,7 +103,7 @@ class AssetPreloader(object):
         key_name: str,
         *,
         rotation: int = 0,
-        size: Optional[List[int]] = None,
+        size: Optional[Tuple[int, int]] = None,
         force_size: bool = False
     ) -> Image:
         scale_ratio = self.game.isr
@@ -164,7 +166,7 @@ class AssetPreloader(object):
 
 def load_images(
     folder: str, allow_fail: bool = False, in_dir: str = main_dir
-) -> List[Any]:
+) -> List[Img]:
     folder = os.path.join(in_dir, folder)
     if allow_fail and not os.path.exists(folder):
         return []
@@ -196,7 +198,7 @@ def load_image(
     return surface.convert_alpha()
 
 
-def load_sound(file_name: str) -> Any:
+def load_sound(file_name: str) -> Optional[pygame.mixer.Sound]:
     """because pygame can be be compiled without mixer."""
     if not pygame.mixer:
         return None
@@ -209,7 +211,7 @@ def load_sound(file_name: str) -> Any:
         raise
 
 
-def load_music(file_name: str) -> Any:
+def load_music(file_name: str) -> Optional[io.BytesIO]:
     sound_file = os.path.join(main_dir, file_name)
     try:
         with open(sound_file, "rb") as in_file:

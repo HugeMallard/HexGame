@@ -7,10 +7,13 @@ from pygame.locals import OPENGL
 from constants import DEFAULT_FRAME_RATE
 from constants import DEFAULT_FULLSCREEN
 from constants import DEFAULT_RESOLUTION
+from constants import Size
 from load_asset import AssetPreloader
-from sprites import Grid
+from logic import Grid
 from utilities import ControlConfiguration
 from utilities import setup_gl
+
+# from sprites import GridSprite
 
 
 class Game(object):
@@ -50,4 +53,5 @@ class Game(object):
         setup_gl(self.SCREENRECT.size[0], self.SCREENRECT.size[1])
 
     def draw_grid(self, size: int, max_pix_x: int, max_pix_y: int) -> None:
-        self.grid = Grid(self, size, [max_pix_x, max_pix_y])
+        self.grid = Grid(size, Size(max_pix_x, max_pix_y))
+        self.grid.generate()
