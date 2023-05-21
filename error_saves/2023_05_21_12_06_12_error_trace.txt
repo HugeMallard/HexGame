@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\Repositories\HexGame\main.py", line 51, in main
+    if not handle_input(game):
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\Repositories\HexGame\utilities\ui_manager.py", line 43, in handle_input
+    if (game.game_started or game.showing_intro) and not game.paused:
+        ^^^^^^^^^^^^^^^^^
+AttributeError: 'Game' object has no attribute 'game_started'

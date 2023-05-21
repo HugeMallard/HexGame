@@ -1,10 +1,12 @@
-import os
-from constants import SAVE_FILE
-from shutil import copyfile
-from datetime import datetime
-import traceback
-import pygame
 import logging
+import os
+import traceback
+from datetime import datetime
+from shutil import copyfile
+
+import pygame
+
+from constants import SAVE_FILE
 
 
 LOGGER = logging.getLogger(__file__)
@@ -26,6 +28,6 @@ def save_error(dt_string, screen):
     out_file_name = os.path.join(error_dir, f"{dt_string}_error_trace.txt")
     with open(out_file_name, "w") as out_file:
         traceback.print_exc(file=out_file)
-    LOGGER.warn(f"ERROR LOG SAVED TO {out_file_name}")
+    LOGGER.warning(f"ERROR LOG SAVED TO {out_file_name}")
     out_file_name = os.path.join(error_dir, f"{dt_string}_error_screencap.jpeg")
     pygame.image.save(screen, out_file_name)
