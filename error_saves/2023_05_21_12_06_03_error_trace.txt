@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\andre\Repositories\HexGame\main.py", line 51, in main
-    if not handle_input(game):
-           ^^^^^^^^^^^^^^^^^^
-  File "C:\Users\andre\Repositories\HexGame\utilities\ui_manager.py", line 8, in handle_input
-    joy_con = game.control_config.joystick_controls
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'ControlConfiguration' object has no attribute 'joystick_controls'

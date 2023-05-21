@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\andre\Repositories\HexGame\main.py", line 54, in main
-    game.ui_manager.update()
-    ^^^^^^^^^^^^^^^
-AttributeError: 'Game' object has no attribute 'ui_manager'

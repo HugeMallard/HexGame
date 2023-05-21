@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# Nuitka
+main.build/
+main.dist/
+
+# Repo specific
+error_saves/
+
 # Distribution / packaging
 .Python
 build/
