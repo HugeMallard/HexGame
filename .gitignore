@@ -12,6 +12,8 @@ main.dist/
 
 # Repo specific
 error_saves/
+.vscode/
+steamworks/
 
 # Distribution / packaging
 .Python
