@@ -65,15 +65,19 @@ class Grid(object):
     Converts hex coords to pixels (x, y)
     """
 
-    def __init__(self, size: int, bounding_rect: Coord, centre: Coord) -> None:
+    def __init__(
+        self, size: int, bounding_rect: Coord, centre: Coord, skew: float = 1
+    ) -> None:
         """
         Args:
             size (int): the maximum size of the grid (measured as number of grid spaces from centre to the edge, non-inclusive)
             bounding_rect (Coord): the pixel area that encloses the grid
             centre (Coord): the pixel centre of the grid
+            skew (float): Shrinks the vertical axis of the grid
         """
         self.size = size
         self.centre = centre
+        self.skew = skew
         self.cells: List[Cell] = []
 
         # Create grid

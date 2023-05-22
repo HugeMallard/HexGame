@@ -50,7 +50,7 @@ def main(winstyle: int = 0) -> None:
 
     res = Coord(DEFAULT_RESOLUTION[0], DEFAULT_RESOLUTION[1])
     centre = round(res / 2)
-    grid = Grid(3, res, centre)
+    grid = Grid(6, res, centre)
     grid.generate()
     game.draw_grid(grid)
 
