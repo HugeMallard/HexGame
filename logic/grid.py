@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import math
 from typing import List
 from typing import Optional
 
@@ -66,10 +65,12 @@ class Grid(object):
     Converts hex coords to pixels (x, y)
     """
 
-    def __init__(self, size: int, pixel_size: Coord, centre: Coord) -> None:
+    def __init__(self, size: int, bounding_rect: Coord, centre: Coord) -> None:
         """
         Args:
             size (int): the maximum size of the grid (measured as number of grid spaces from centre to the edge, non-inclusive)
+            bounding_rect (Coord): the pixel area that encloses the grid
+            centre (Coord): the pixel centre of the grid
         """
         self.size = size
         self.centre = centre
@@ -77,25 +78,30 @@ class Grid(object):
 
         # Create grid
         self.size = size
-        self.pixel_size = pixel_size  # [width, height]
+        self.bounding_rect = bounding_rect  # [width, height]
 
     @property
-    def cell_side_length(self) -> int:
-        # Calculate the size of the cell in pixels to fill the grid
+    def cell_side_length(self) -> float:
+        # Calculate the size of the cell to fill the grid
         num_sides_x = 4 * self.size + 2
-        width_a = math.floor((self.pixel_size.x / num_sides_x) / SQRT_3)
+        width_a = 2 * (self.bounding_rect.x / num_sides_x) / SQRT_3
 
         num_sides_y = 3 * self.size + 2
-        height_a = math.floor(self.pixel_size.y / num_sides_y)
+        height_a = self.bounding_rect.y / num_sides_y
 
         a = min(width_a, height_a)
         return a
 
+    @property
+    def cell_side_length_pix(self) -> int:
+        # Calculate the size of the cell in pixels to fill the grid
+        return round(self.cell_side_length)
+
     def get_cell(self, hex: Hex) -> Optional[Cell]:
-        matches = [c for c in self.cells if c == hex]
-        if not matches:
+        match = [c for c in self.cells if c == hex]
+        if not match:
             return None
-        return matches[0]
+        return match[0]
 
     @property
     def expected_num_cells(self) -> int:
@@ -108,9 +114,25 @@ class Grid(object):
         """
         return self.expected_num_cells == len(self.cells)
 
+    @property
+    def check_area_coverage(self) -> bool:
+        """
+        Check that the cells fill the grid
+        """
+
+        def check_range(length: int, error: int, size: float) -> bool:
+            return length - error <= size <= length + error
+
+        size_x = self.cell_side_length * SQRT_3 * (self.size * 4 + 2) / 2
+        size_y = self.cell_side_length * (self.size * 3 + 2)
+        error_margin = 1  # Allow this many pixels off
+        x_in_range = check_range(self.bounding_rect.pix_x, error_margin, size_x)
+        y_in_range = check_range(self.bounding_rect.pix_y, error_margin, size_y)
+        return x_in_range or y_in_range
+
     def generate(self) -> None:
         self.cells.clear()
-        side_length = self.cell_side_length
+        side_length = self.cell_side_length_pix
         for q in range(-self.size, self.size + 1):  # q
             for r in range(-self.size, self.size + 1):  # r
                 for s in range(-self.size, self.size + 1):  # s

@@ -41,22 +41,24 @@ def test_grid_helper_methods() -> None:
 
 
 @pytest.mark.parametrize(  # type: ignore
-    "size,x,y,side",
+    "size,x,y,side,num_cells",
     [
-        (2, 300, 300, 17),
-        (1, 300, 300, 28),
-        (3, 600, 200, 18),
-        (5, 900, 700, 23),
-        (0, 900, 900, 259),
+        (2, 300, 300, 35, 19),
+        (1, 300, 300, 58, 7),
+        (3, 600, 200, 18, 37),
+        (5, 900, 700, 41, 91),
+        (0, 900, 900, 450, 1),
+        (4, 1280, 720, 51, 61),
     ],
 )
-def test_grid_generation(size: int, x: int, y: int, side: int) -> None:
+def test_grid_generation(size: int, x: int, y: int, side: int, num_cells: int) -> None:
     grid = Grid(size, Coord(x, y), Coord(500, 500))
 
-    assert grid.cell_side_length == side
+    assert grid.cell_side_length_pix == side
 
     grid.generate()
 
-    assert (
-        grid.check_num_cells
-    ), f"Created {len(grid.cells)} instead of expected number {grid.expected_num_cells}"
+    assert grid.check_num_cells
+    assert len(grid.cells) == num_cells
+
+    assert grid.check_area_coverage
