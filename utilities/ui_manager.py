@@ -9,6 +9,9 @@ from constants import KEY_NAV
 
 def handle_input(game: Any) -> bool:
     key_con = game.control_config.keyboard_controls
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            return False
     return True
     # joy_con = game.control_config.joystick_controls
     # for event in pygame.event.get():

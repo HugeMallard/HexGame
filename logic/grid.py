@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+import logging
 import math
+from typing import List
 from typing import Optional
-from typing import Set
-from typing import Tuple
 
 from .cell import Cell
 from .hex import Hex
-from constants import Size
+from constants import Coord
 from constants import SQRT_3
+
+
+LOGGER = logging.getLogger(__file__)
 
 
 LEFT = Hex(-1, 0, +1)  # 0
@@ -63,13 +66,14 @@ class Grid(object):
     Converts hex coords to pixels (x, y)
     """
 
-    def __init__(self, size: int, pixel_size: Size) -> None:
+    def __init__(self, size: int, pixel_size: Coord, centre: Coord) -> None:
         """
         Args:
             size (int): the maximum size of the grid (measured as number of grid spaces from centre to the edge, non-inclusive)
         """
         self.size = size
-        self.cells: Set[Cell] = set()
+        self.centre = centre
+        self.cells: List[Cell] = []
 
         # Create grid
         self.size = size
@@ -93,11 +97,23 @@ class Grid(object):
             return None
         return matches[0]
 
+    @property
+    def expected_num_cells(self) -> int:
+        return 3 * self.size * self.size + 3 * self.size + 1
+
+    @property
+    def check_num_cells(self) -> bool:
+        """
+        size should be  3n^2 + 3n + 1
+        """
+        return self.expected_num_cells == len(self.cells)
+
     def generate(self) -> None:
         self.cells.clear()
         side_length = self.cell_side_length
-        for q in range(0, self.size):  # q
-            for r in range(0, self.size):  # r
-                for s in range(0, self.size):  # s
-                    cell = Cell(q, r, s, side_length)
-                    self.cells.add(cell)
+        for q in range(-self.size, self.size + 1):  # q
+            for r in range(-self.size, self.size + 1):  # r
+                for s in range(-self.size, self.size + 1):  # s
+                    if q + r + s == 0:
+                        cell = Cell(q, r, s, side_length, grid_centre=self.centre)
+                        self.cells.append(cell)

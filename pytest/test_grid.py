@@ -1,5 +1,5 @@
 import pytest
-from constants import Size
+from constants import Coord
 from logic import BOT_RIGHT
 from logic import Grid
 from logic import GridObject
@@ -51,6 +51,12 @@ def test_grid_helper_methods() -> None:
     ],
 )
 def test_grid_generation(size: int, x: int, y: int, side: int) -> None:
-    grid = Grid(size, Size(x, y))
+    grid = Grid(size, Coord(x, y), Coord(500, 500))
 
     assert grid.cell_side_length == side
+
+    grid.generate()
+
+    assert (
+        grid.check_num_cells
+    ), f"Created {len(grid.cells)} instead of expected number {grid.expected_num_cells}"

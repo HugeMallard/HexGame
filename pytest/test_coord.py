@@ -8,4 +8,4 @@ def test_coord_creation() -> None:
     assert coord.y == 100
 
     with pytest.raises(TypeError):  # type: ignore
-        coord = Coord(20.7, 50.0)  # type: ignore
+        coord = Coord("A", 50.0)  # type: ignore

@@ -13,6 +13,7 @@ import pygame
 from PIL import Image
 from PIL.Image import Image as Img
 
+from constants import Coord
 from utilities import resize_image_by_scale
 from utilities import scale_and_rotate_image
 
@@ -105,7 +106,7 @@ class AssetPreloader(object):
         rotation: int = 0,
         size: Optional[Tuple[int, int]] = None,
         force_size: bool = False
-    ) -> Image:
+    ) -> List[Img]:
         scale_ratio = self.game.isr
         images = self._image_dict[key_name]
         if isinstance(images, list):
@@ -117,7 +118,7 @@ class AssetPreloader(object):
                 transformed.append(img)
             return transformed
         image = scale_and_rotate_image(images, scale_ratio, size, rotation, force_size)
-        return image
+        return [image]
 
     def sound(self, key_name: str) -> pygame.mixer.Sound:
         sound = pygame.mixer.Sound(self._sound_dict[key_name].get_raw())

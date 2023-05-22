@@ -3,7 +3,10 @@ import logging
 import OpenGL  # noqa: F401  # Needed for nuitka compile
 import pygame
 
+from constants import Coord
+from constants import DEFAULT_RESOLUTION
 from game import Game
+from logic import Grid
 from steamworks import STEAMWORKS
 from utilities import catch_error
 from utilities import draw_open_gl
@@ -45,20 +48,31 @@ def main(winstyle: int = 0) -> None:
     # game.go_to_first_screen()
     # game.sound_attribution = SoundAttribution()
 
-    game.texID = init_open_gl(generate_tex_id=True)
-    game.draw_grid(4, 400, 400)
+    res = Coord(DEFAULT_RESOLUTION[0], DEFAULT_RESOLUTION[1])
+    centre = round(res / 3)
+    grid = Grid(3, res / 2, centre)
+    grid.generate()
+    game.draw_grid(grid)
 
+    game.texID = init_open_gl(generate_tex_id=True)
     try:
         while True:
             if not handle_input(game):
                 return
 
-            # game.ui_manager.update()
+            game.all_groups.clear(game.screen, game.background)
+            game.all_groups.update()
+            # draw the scene
+            dirty = game.all_groups.draw(game.screen)
+            # game.update()
 
             init_open_gl()
             surface_to_texture(game.screen, game.texID)
             draw_open_gl(game.texID)
             pygame.display.flip()
+
+            dt = game.clock.tick_busy_loop(game.frame_rate)
+            game.dt = dt
     except Exception as e:
         if not DEBUG:  # TODO: Uncomment this for release
             raise
