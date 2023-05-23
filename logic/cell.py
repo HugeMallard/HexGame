@@ -8,14 +8,18 @@ GRID_ZERO = [int(DEFAULT_RESOLUTION[0] / 2), int(DEFAULT_RESOLUTION[1]) / 2]
 
 
 class Cell(Hex):
-    side_length: int  # Side length in pixels
 
     """
     One cell in the grid
     """
 
-    def __init__(self, q: int, r: int, s: int, side_length: int, grid_centre: Coord):
-        self.side_length = side_length  # in pixels
+    def __init__(self, q: int, r: int, s: int, h: float, w: float, grid_centre: Coord):
+        if h < 0:
+            raise ValueError(f"Cell height must be a positive number but received {h}")
+        if w < 0:
+            raise ValueError(f"Cell width must be a positive number but received {w}")
+        self.height = h  # in pixels
+        self.width = w  # in pixels
         self.grid_centre = grid_centre  # in pixels
         self.image_index = 0
         super().__init__(q, r, s)
@@ -25,9 +29,10 @@ class Cell(Hex):
         """
         Get the pixel coords of the centre of the cell
         """
-        l = self.side_length
-        y = 3 * l * -self.r / 2
-        x = SQRT_3 * l * (-self.r / 2 - self.s)
+        h = self.height
+        w = self.width
+        y = h * -self.r * 3 / 4
+        x = w * (-self.r / 2 - self.s)
         return Coord(x=x, y=y)
 
     @property
@@ -43,9 +48,7 @@ class Cell(Hex):
         Calculate the rectangular size of the cell in pixels as a float
         for subsequent calculations
         """
-        x = self.side_length * SQRT_3
-        y = self.side_length * 2
-        return Coord(x=x, y=y)
+        return Coord(x=self.width, y=self.height)
 
     @property
     def render_pos(self) -> Coord:

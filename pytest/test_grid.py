@@ -43,8 +43,8 @@ def test_grid_helper_methods() -> None:
 @pytest.mark.parametrize(  # type: ignore
     "size,x,y,side,num_cells",
     [
-        (2, 300, 300, 35, 19),
-        (1, 300, 300, 58, 7),
+        (2, 300, 300, 37, 19),
+        (1, 300, 300, 60, 7),
         (3, 600, 200, 18, 37),
         (5, 900, 700, 41, 91),
         (0, 900, 900, 450, 1),
@@ -54,7 +54,7 @@ def test_grid_helper_methods() -> None:
 def test_grid_generation(size: int, x: int, y: int, side: int, num_cells: int) -> None:
     grid = Grid(size, Coord(x, y), Coord(500, 500))
 
-    assert grid.cell_side_length_pix == side
+    assert int(grid.cell_height / 2) == side
 
     grid.generate()
 

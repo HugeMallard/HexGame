@@ -85,21 +85,18 @@ class Grid(object):
         self.bounding_rect = bounding_rect  # [width, height]
 
     @property
-    def cell_side_length(self) -> float:
-        # Calculate the size of the cell to fill the grid
-        num_sides_x = 4 * self.size + 2
-        width_a = 2 * (self.bounding_rect.x / num_sides_x) / SQRT_3
-
+    def cell_height(self) -> float:
+        # Calculate the height of the cells to fill the grid
         num_sides_y = 3 * self.size + 2
-        height_a = self.bounding_rect.y / num_sides_y
-
-        a = min(width_a, height_a)
-        return a
+        height = self.skew * self.bounding_rect.y / num_sides_y
+        return height * 2
 
     @property
-    def cell_side_length_pix(self) -> int:
-        # Calculate the size of the cell in pixels to fill the grid
-        return round(self.cell_side_length)
+    def cell_width(self) -> float:
+        # Calculate the width of the cell to fill the grid
+        num_sides_x = 4 * self.size + 2
+        width = self.bounding_rect.x / num_sides_x
+        return width * 2
 
     def get_cell(self, hex: Hex) -> Optional[Cell]:
         match = [c for c in self.cells if c == hex]
@@ -127,8 +124,8 @@ class Grid(object):
         def check_range(length: int, error: int, size: float) -> bool:
             return length - error <= size <= length + error
 
-        size_x = self.cell_side_length * SQRT_3 * (self.size * 4 + 2) / 2
-        size_y = self.cell_side_length * (self.size * 3 + 2)
+        size_x = self.cell_width * (self.size * 4 + 2) / 2
+        size_y = self.cell_height * (self.size * 3 + 2)
         error_margin = 1  # Allow this many pixels off
         x_in_range = check_range(self.bounding_rect.pix_x, error_margin, size_x)
         y_in_range = check_range(self.bounding_rect.pix_y, error_margin, size_y)
@@ -136,10 +133,11 @@ class Grid(object):
 
     def generate(self) -> None:
         self.cells.clear()
-        side_length = self.cell_side_length_pix
+        h = self.cell_height
+        w = self.cell_width
         for q in range(-self.size, self.size + 1):  # q
             for r in range(-self.size, self.size + 1):  # r
                 for s in range(-self.size, self.size + 1):  # s
                     if q + r + s == 0:
-                        cell = Cell(q, r, s, side_length, grid_centre=self.centre)
+                        cell = Cell(q, r, s, h, w, grid_centre=self.centre)
                         self.cells.append(cell)

@@ -5,31 +5,37 @@ from logic import Cell
 
 
 @pytest.mark.parametrize(  # type: ignore
-    "q,r,s,l,x,y",
+    "q,r,s,h,w,x,y",
     [
-        (0, 0, 0, 60, 0, 0),
-        (1, -1, 0, 60, 51.96, 90),
-        (0, -1, 1, 60, -51.96, 90),
-        (0, 1, -1, 60, 51.96, -90),
-        (-1, 1, 0, 60, -51.96, -90),
-        (1, 0, -1, 60, 103.92, 0),
-        (-1, 0, 1, 60, -103.92, 0),
+        (0, 0, 0, 60, 0, 0, 0),
+        (1, -1, 0, 60, 51.96, 25.98, 45),
+        (0, -1, 1, 60, 51.96, -25.98, 45),
+        (0, 1, -1, 60, 51.96, 25.98, -45),
+        (-1, 1, 0, 60, 51.96, -25.98, -45),
+        (1, 0, -1, 60, 51.96, 51.96, 0),
+        (-1, 0, 1, 60, 51.96, -51.96, 0),
     ],
 )
-def test_cell_pixel_methods(q: int, r: int, s: int, l: int, x: int, y: int) -> None:
+def test_cell_pixel_methods(
+    q: int, r: int, s: int, h: int, w: int, x: int, y: int
+) -> None:
     grid_centre = Coord(400, 400)
-    cell = Cell(q, r, s, l, grid_centre)
+    cell = Cell(q, r, s, h, w, grid_centre)
     cell_centre = cell.centre
-    assert cell_centre.x == x
-    assert cell_centre.y == y
+    assert (
+        cell_centre.x == x
+    ), f"Cell Centre x {cell_centre.x} different to expected {x}"
+    assert (
+        cell_centre.y == y
+    ), f"Cell Centre y {cell_centre.y} different to expected {y}"
 
     centre_from_grid = cell.centre_from_grid
     assert centre_from_grid.x == x + grid_centre.x
     assert centre_from_grid.y == y + grid_centre.y
 
     size = cell.size
-    size_x = cell.side_length * SQRT_3
-    size_y = cell.side_length * 2
+    size_x = cell.width
+    size_y = cell.height
     assert size.x == size_x
     assert size.y == size_y
 
