@@ -1,9 +1,13 @@
+import logging
+
 import pytest
 from constants import Coord
 from logic import BOT_RIGHT
 from logic import Grid
 from logic import GridObject
 from logic import Hex
+
+LOGGER = logging.getLogger(__file__)
 
 
 def test_hex_creation() -> None:
@@ -41,17 +45,19 @@ def test_grid_helper_methods() -> None:
 
 
 @pytest.mark.parametrize(  # type: ignore
-    "size,x,y,side,num_cells",
+    "size,x,y,side,num_cells,dim",
     [
-        (2, 300, 300, 37, 19),
-        (1, 300, 300, 60, 7),
-        (3, 600, 200, 18, 37),
-        (5, 900, 700, 41, 91),
-        (0, 900, 900, 450, 1),
-        (4, 1280, 720, 51, 61),
+        (2, 300, 300, 37, 19, "width"),
+        (1, 300, 300, 60, 7, "width"),
+        (3, 600, 200, 18, 37, "height"),
+        (5, 900, 700, 41, 91, "height"),
+        (0, 900, 900, 450, 1, "height"),
+        (4, 1280, 720, 51, 61, "height"),
     ],
 )
-def test_grid_generation(size: int, x: int, y: int, side: int, num_cells: int) -> None:
+def test_grid_generation(
+    size: int, x: int, y: int, side: int, num_cells: int, dim: str
+) -> None:
     grid = Grid(size, Coord(x, y), Coord(500, 500))
 
     assert int(grid.cell_height / 2) == side
@@ -62,3 +68,4 @@ def test_grid_generation(size: int, x: int, y: int, side: int, num_cells: int) -
     assert len(grid.cells) == num_cells
 
     assert grid.check_area_coverage
+    assert grid.bounding_dimension == dim

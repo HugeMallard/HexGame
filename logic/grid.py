@@ -32,6 +32,10 @@ hex_diagonal_vectors = [
 ]
 
 
+def check_range(length: int, error: int, size: float) -> bool:
+    return length - error <= size <= length + error
+
+
 class GridObject(Hex):
     """
     Helper functions for objects on the grid
@@ -86,17 +90,31 @@ class Grid(object):
 
     @property
     def cell_height(self) -> float:
-        # Calculate the height of the cells to fill the grid
-        num_sides_y = 3 * self.size + 2
-        height = self.skew * self.bounding_rect.y / num_sides_y
-        return height * 2
+        # Get the height of the cells to fill the grid
+        num_sides_y = (3 * self.size + 2) / 2
+        height = (self.bounding_rect.y / self.skew) / num_sides_y
+        return height
 
     @property
     def cell_width(self) -> float:
-        # Calculate the width of the cell to fill the grid
-        num_sides_x = 4 * self.size + 2
+        # Get the width of the cell to fill the grid
+        num_sides_x = 2 * self.size + 1
         width = self.bounding_rect.x / num_sides_x
-        return width * 2
+        return width
+
+    @property
+    def calc_height(self) -> float:
+        # Calculate the height from the width
+        return 2 * self.cell_width * self.skew / SQRT_3
+
+    @property
+    def calc_width(self) -> float:
+        # Calculate the width from the height
+        return (self.cell_height * SQRT_3) / (2 * self.skew)
+
+    @property
+    def bounding_dimension(self) -> str:
+        return "width" if self.calc_height < self.cell_height else "height"
 
     def get_cell(self, hex: Hex) -> Optional[Cell]:
         match = [c for c in self.cells if c == hex]
@@ -121,9 +139,6 @@ class Grid(object):
         Check that the cells fill the grid
         """
 
-        def check_range(length: int, error: int, size: float) -> bool:
-            return length - error <= size <= length + error
-
         size_x = self.cell_width * (self.size * 4 + 2) / 2
         size_y = self.cell_height * (self.size * 3 + 2)
         error_margin = 1  # Allow this many pixels off
@@ -133,8 +148,12 @@ class Grid(object):
 
     def generate(self) -> None:
         self.cells.clear()
-        h = self.cell_height
-        w = self.cell_width
+        if self.bounding_dimension == "height":
+            h = self.cell_height
+            w = SQRT_3 * h / (2 * self.skew)
+        else:
+            w = self.cell_width
+            h = 2 * w * self.skew / SQRT_3
         for q in range(-self.size, self.size + 1):  # q
             for r in range(-self.size, self.size + 1):  # r
                 for s in range(-self.size, self.size + 1):  # s
