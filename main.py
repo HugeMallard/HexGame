@@ -49,8 +49,9 @@ def main(winstyle: int = 0) -> None:
     # game.sound_attribution = SoundAttribution()
 
     res = Coord(DEFAULT_RESOLUTION[0], DEFAULT_RESOLUTION[1])
+    size = res
     centre = round(res / 2)
-    grid = Grid(6, res, centre, 0.6)
+    grid = Grid(2, size, centre, 0.8)
     grid.generate()
     game.draw_grid(grid)
 

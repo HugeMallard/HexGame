@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import Tuple
-from typing import Union
 
 SAVE_FILE = "save.sav"
 CONFIG_FILE = "config.ini"
@@ -30,13 +29,18 @@ class Coord(object):
             return NotImplemented
         return Coord(x=self.x - n.x, y=self.y - n.y)  # type: ignore
 
-    def __truediv__(self, n: int) -> Coord:
+    def __truediv__(self, n: float) -> Coord:
         return Coord(x=self.x / n, y=self.y / n)
+
+    def __mul__(self, n: object) -> Coord:
+        if not hasattr(n, "x") and not hasattr(n, "y"):
+            return NotImplemented
+        return Coord(x=round(self.x * n.x, 6), y=round(self.y * n.y, 6))  # type: ignore
 
     def __round__(self, digits: int = 0) -> Coord:
         return Coord(x=round(self.x), y=round(self.y))
 
-    def __init__(self, x: Union[int, float], y: Union[int, float]) -> None:
+    def __init__(self, x: float, y: float) -> None:
         if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
             raise TypeError(f"X and Y must be numbers for Coord, received {x}, {y}")
         self.x = x

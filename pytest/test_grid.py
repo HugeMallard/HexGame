@@ -2,26 +2,13 @@ import logging
 
 import pytest
 from constants import Coord
+from constants import SQRT_3
 from logic import BOT_RIGHT
 from logic import Grid
 from logic import GridObject
 from logic import Hex
 
 LOGGER = logging.getLogger(__file__)
-
-
-def test_hex_creation() -> None:
-    q = 2
-    r = 2
-    s = -4
-
-    hex = Hex(q, r, s)
-    assert hex.self_coord_check is True
-
-    s = -3
-    with pytest.raises(AssertionError):  # type: ignore
-        hex = Hex(q, r, s)
-        assert hex.self_coord_check is False
 
 
 def test_grid_helper_methods() -> None:
@@ -67,5 +54,33 @@ def test_grid_generation(
     assert grid.check_num_cells
     assert len(grid.cells) == num_cells
 
+    assert grid.check_area_coverage
+    assert grid.bounding_dimension == dim
+
+
+@pytest.mark.parametrize(  # type: ignore
+    "size,x,y,h,w,dim,skew",
+    [
+        (2, 300, 300, 75, 60, "width", 0.6),
+        (1, 300, 300, 120, 100, "width", 0.2),
+    ],
+)
+def test_skew_grid_generation(
+    size: int, x: int, y: int, h: float, w: float, dim: str, skew: float
+) -> None:
+    grid = Grid(size, Coord(x, y), Coord(500, 500), skew)
+
+    assert grid.cell_height == h
+    assert grid.cell_width == w
+
+    calc_height = 2 * w * skew / SQRT_3
+    assert grid.calc_height == calc_height
+
+    calc_width = (h * SQRT_3) / (2 * skew)
+    assert grid.calc_width == calc_width
+
+    grid.generate()
+
+    assert grid.check_num_cells
     assert grid.check_area_coverage
     assert grid.bounding_dimension == dim

@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 from .cell import Cell
 from .hex import Hex
@@ -92,7 +93,7 @@ class Grid(object):
     def cell_height(self) -> float:
         # Get the height of the cells to fill the grid
         num_sides_y = (3 * self.size + 2) / 2
-        height = (self.bounding_rect.y / self.skew) / num_sides_y
+        height = (self.bounding_rect.y) / num_sides_y
         return height
 
     @property
@@ -134,13 +135,23 @@ class Grid(object):
         return self.expected_num_cells == len(self.cells)
 
     @property
+    def cell_dimensions(self) -> Tuple[float, float]:
+        if self.bounding_dimension == "height":
+            h = self.cell_height
+            w = self.calc_width
+        else:
+            w = self.cell_width
+            h = self.calc_height
+        return (w, h)
+
+    @property
     def check_area_coverage(self) -> bool:
         """
         Check that the cells fill the grid
         """
-
-        size_x = self.cell_width * (self.size * 4 + 2) / 2
-        size_y = self.cell_height * (self.size * 3 + 2)
+        w, h = self.cell_dimensions
+        size_x = w * (self.size * 2 + 1)
+        size_y = h * (self.size * 3 + 2) / 2
         error_margin = 1  # Allow this many pixels off
         x_in_range = check_range(self.bounding_rect.pix_x, error_margin, size_x)
         y_in_range = check_range(self.bounding_rect.pix_y, error_margin, size_y)
@@ -148,12 +159,7 @@ class Grid(object):
 
     def generate(self) -> None:
         self.cells.clear()
-        if self.bounding_dimension == "height":
-            h = self.cell_height
-            w = SQRT_3 * h / (2 * self.skew)
-        else:
-            w = self.cell_width
-            h = 2 * w * self.skew / SQRT_3
+        w, h = self.cell_dimensions
         for q in range(-self.size, self.size + 1):  # q
             for r in range(-self.size, self.size + 1):  # r
                 for s in range(-self.size, self.size + 1):  # s

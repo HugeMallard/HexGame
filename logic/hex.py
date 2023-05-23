@@ -14,9 +14,10 @@ class Hex(object):
         self.r = r
         self.s = s
 
-        assert (
-            self.self_coord_check is True
-        ), f"Created a cube with invalid coords as sum(q, r, s ) != 0: ({self.q} {self.r} {self.s})"
+        if not self.self_coord_check:
+            raise ValueError(
+                f"Tried to create a cube with invalid coords: ({self.q} {self.r} {self.s})"
+            )
 
     @property
     def self_coord_check(self) -> bool:
