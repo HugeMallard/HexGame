@@ -7,6 +7,8 @@ from constants import Coord
 from constants import DEFAULT_RESOLUTION
 from game import Game
 from logic import Grid
+from logic import Hex
+from logic import Ship
 from steamworks import STEAMWORKS
 from utilities import catch_error
 from utilities import draw_open_gl
@@ -54,7 +56,10 @@ def main(winstyle: int = 0) -> None:
     centre = round(res / 2)
     grid = Grid(5, size, centre, 0.65)
     grid.generate()
+
+    ship = Ship(grid.get_cell(Hex(0, 0, 0)))  # type: ignore
     game.draw_grid(grid)
+    game.draw_ship(ship)
 
     game.texID = init_open_gl(generate_tex_id=True)
     try:

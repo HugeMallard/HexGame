@@ -58,3 +58,10 @@ class Cell(Hex):
         size = self.size / 2
         centre = self.centre_from_grid
         return round(centre - size)
+
+    def update_coords(self, hex: object) -> None:
+        if not (hasattr(hex, "q") and hasattr(hex, "r") and hasattr(hex, "s")):
+            raise NotImplementedError
+        self.q = hex.q
+        self.r = hex.r
+        self.s = hex.s

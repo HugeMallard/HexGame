@@ -4,6 +4,7 @@ from typing import List
 import pygame
 
 from .cell_sprite import CellSprite
+from constants import Coord
 from logic import Grid
 
 
@@ -21,7 +22,7 @@ class GridSprite(pygame.sprite.Sprite):
         self.cell_sprites_group = pygame.sprite.Group()
 
         images = self.game.asset_preloader.image(
-            "intro_background", size=grid.bounding_rect.to_pix
+            "intro_background", size=self.game.resolution
         )
         self.images = images
         self.image_index = 0

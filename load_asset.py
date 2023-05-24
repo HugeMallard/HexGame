@@ -24,8 +24,9 @@ main_dir = os.path.join(root_dir, "assets")
 
 
 images_to_load: Dict[str, str] = dict(
-    grid_hex="grid_hex.png",
+    cell="cell",
     intro_background="background.png",
+    ship="ship",
 )
 
 sounds_to_load: Dict[str, str] = dict()
@@ -171,7 +172,7 @@ class AssetPreloader(object):
 def load_images(
     folder: str, allow_fail: bool = False, in_dir: str = main_dir
 ) -> List[Img]:
-    folder = os.path.join(in_dir, folder)
+    folder = os.path.join(in_dir, "img", folder)
     if allow_fail and not os.path.exists(folder):
         return []
     files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
