@@ -81,4 +81,5 @@ class Game(object):
 
     def draw_grid(self, grid: Grid) -> None:
         self.grid_sprite = GridSprite(self, grid)
+        self.all_groups.add(self.grid_sprite)
         self.grid_sprite.draw_cells()

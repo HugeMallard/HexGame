@@ -37,6 +37,8 @@ def main(winstyle: int = 0) -> None:
         game.steamworks_initialised = False
     game.steam_achievements = SteamAchievements(game)
 
+    res = Coord(DEFAULT_RESOLUTION[0], DEFAULT_RESOLUTION[1])
+
     # Create the background, tile the bgd image
     pygame.display.flip()
     # game_icon = game.asset_preloader.image("game_icon")
@@ -48,10 +50,9 @@ def main(winstyle: int = 0) -> None:
     # game.go_to_first_screen()
     # game.sound_attribution = SoundAttribution()
 
-    res = Coord(DEFAULT_RESOLUTION[0], DEFAULT_RESOLUTION[1])
-    size = res
+    size = res / 1.2
     centre = round(res / 2)
-    grid = Grid(2, size, centre, 0.8)
+    grid = Grid(5, size, centre, 0.65)
     grid.generate()
     game.draw_grid(grid)
 

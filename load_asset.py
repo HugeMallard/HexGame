@@ -23,7 +23,10 @@ root_dir = os.path.split(os.path.abspath(__file__))[0]
 main_dir = os.path.join(root_dir, "assets")
 
 
-images_to_load: Dict[str, str] = dict(grid_hex="grid_hex.png")
+images_to_load: Dict[str, str] = dict(
+    grid_hex="grid_hex.png",
+    intro_background="background.png",
+)
 
 sounds_to_load: Dict[str, str] = dict()
 

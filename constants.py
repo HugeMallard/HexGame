@@ -6,7 +6,7 @@ from typing import Tuple
 SAVE_FILE = "save.sav"
 CONFIG_FILE = "config.ini"
 DEFAULT_FULLSCREEN = False
-DEFAULT_RESOLUTION = (1280, 720)
+DEFAULT_RESOLUTION = (1600, 900)
 DEFAULT_FRAME_RATE = 60
 SQRT_3 = 1.732
 
