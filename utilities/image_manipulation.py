@@ -36,12 +36,11 @@ def scale_and_rotate_image(
     rotation: int = 0,
     force_size: bool = False,
 ) -> Image:
+    if rotation:
+        img = pygame.transform.rotate(img, rotation)
     if size:
         scale = size if force_size else [int(size[0] * ratio), int(size[1] * ratio)]
         img = resize_image(img, scale)  # type: ignore
     else:
         img = img.convert_alpha()
-
-    if rotation:
-        img = pygame.transform.rotate(img, rotation)
     return img

@@ -1,4 +1,5 @@
 import pytest
+
 from constants import Coord
 from constants import SQRT_3
 from logic import Cell

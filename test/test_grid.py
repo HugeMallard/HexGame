@@ -1,6 +1,7 @@
 import logging
 
 import pytest
+
 from constants import Coord
 from constants import SQRT_3
 from logic import BOT_RIGHT
@@ -84,3 +85,22 @@ def test_skew_grid_generation(
     assert grid.check_num_cells
     assert grid.check_area_coverage
     assert grid.bounding_dimension == dim
+
+
+def test_get_grid_cell() -> None:
+    grid = Grid(4, Coord(1000, 1000), Coord(500, 500), 1)
+
+    grid.generate()
+    assert grid.num_cells == 61
+
+    cell_one = Hex(1, 0, -1)
+    matching_cell = grid.get_cell(cell_one)
+
+    assert matching_cell is not None
+
+    assert matching_cell.q == 1  # type: ignore
+    assert matching_cell.r == 0  # type: ignore
+    assert matching_cell.s == -1  # type: ignore
+
+    cell_missing = Hex(10, 10, -20)
+    assert grid.get_cell(cell_missing) is None

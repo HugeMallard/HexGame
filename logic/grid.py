@@ -124,6 +124,10 @@ class Grid(object):
         return match[0]
 
     @property
+    def num_cells(self) -> int:
+        return len(self.cells)
+
+    @property
     def expected_num_cells(self) -> int:
         return 3 * self.size * self.size + 3 * self.size + 1
 
@@ -132,7 +136,7 @@ class Grid(object):
         """
         size should be  3n^2 + 3n + 1
         """
-        return self.expected_num_cells == len(self.cells)
+        return self.expected_num_cells == self.num_cells
 
     @property
     def cell_dimensions(self) -> Tuple[float, float]:

@@ -7,18 +7,13 @@ from logic import Ship
 
 
 class ShipSprite(pygame.sprite.Sprite):
-
-    """
-    Draws the base grid
-    """
-
     def __init__(self, game: Any, ship: Ship) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         self.ship = ship
 
         images = self.game.asset_preloader.image(
-            "ship", size=self.ship.cell.size.to_pix, force_size=True
+            "ship", size=self.ship.cell.size.to_pix, force_size=True, rotation=240
         )
         self.images = images
         self.image_index = 0

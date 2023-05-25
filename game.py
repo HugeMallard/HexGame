@@ -6,6 +6,7 @@ import pygame
 from pygame.locals import DOUBLEBUF
 from pygame.locals import OPENGL
 
+from constants import Coord
 from constants import DEFAULT_FRAME_RATE
 from constants import DEFAULT_FULLSCREEN
 from constants import DEFAULT_RESOLUTION

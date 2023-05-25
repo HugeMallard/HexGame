@@ -13,7 +13,6 @@ import pygame
 from PIL import Image
 from PIL.Image import Image as Img
 
-from constants import Coord
 from utilities import resize_image_by_scale
 from utilities import scale_and_rotate_image
 
