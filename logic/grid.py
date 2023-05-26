@@ -124,7 +124,7 @@ class Grid(object):
             for r in range(-self.size, self.size + 1):  # r
                 for s in range(-self.size, self.size + 1):  # s
                     if q + r + s == 0:
-                        cell = Cell(q, r, s, h, w, grid_centre=self.centre)
+                        cell = Cell(q, r, h, w, grid_centre=self.centre)
                         self.cells.append(cell)
 
     def neighbours(self, hex: Hex) -> List[Cell]:

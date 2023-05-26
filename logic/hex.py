@@ -9,25 +9,24 @@ class Hex(object):
     def __eq__(self, hex: object) -> bool:
         if not self.is_hex(hex):
             return NotImplemented
-        return hex.q == self.q and hex.r == self.r and hex.s == self.s  # type: ignore
+        return hex.q == self.q and hex.r == self.r  # type: ignore
 
     def __add__(self, hex: object) -> Hex:
         if not self.is_hex(hex):
             return NotImplemented
-        return Hex(q=hex.q + self.q, r=hex.r + self.r, s=hex.s + self.s)  # type: ignore
+        return Hex(q=hex.q + self.q, r=hex.r + self.r)  # type: ignore
 
     def __sub__(self, hex: object) -> Hex:
         if not self.is_hex(hex):
             return NotImplemented
-        return Hex(q=hex.q - self.q, r=hex.r - self.r, s=hex.s - self.s)  # type: ignore
+        return Hex(q=hex.q - self.q, r=hex.r - self.r)  # type: ignore
 
     def __hash__(self) -> int:
         return hash(repr(self))
 
-    def __init__(self, q: float, r: float, s: float):
+    def __init__(self, q: float, r: float):
         self.q = round(q, 4)
         self.r = round(r, 4)
-        self.s = round(s, 4)
         self.is_blocked = False  # Whether to include in path calcs or not
 
         if not self.self_coord_check:
@@ -40,6 +39,10 @@ class Hex(object):
 
     def __repr__(self) -> str:
         return f"Hex(q={self.q},r={self.r},s={self.s})"
+
+    @property
+    def s(self) -> float:
+        return round(-self.q - self.r, 4)
 
     @property
     def self_coord_check(self) -> bool:

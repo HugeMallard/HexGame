@@ -71,7 +71,7 @@ def test_get_grid_cell() -> None:
     grid.generate()
     assert grid.num_cells == 61
 
-    cell_one = Hex(1, 0, -1)
+    cell_one = Hex(1, 0)
     matching_cell = grid.get_cell(cell_one)
 
     assert matching_cell is not None
@@ -80,5 +80,5 @@ def test_get_grid_cell() -> None:
     assert matching_cell.r == 0  # type: ignore
     assert matching_cell.s == -1  # type: ignore
 
-    cell_missing = Hex(10, 10, -20)
+    cell_missing = Hex(10, 10)
     assert grid.get_cell(cell_missing) is None

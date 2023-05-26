@@ -9,7 +9,7 @@ from constants import Coord
 from logic import find_path
 from logic import get_path
 from logic import Grid
-from logic import HexMath
+from logic import Hex
 
 
 LOGGER = logging.getLogger(__file__)
@@ -46,11 +46,12 @@ class GridSprite(pygame.sprite.Sprite):
         size = self.grid.cells[0].size - Coord(spacing, spacing)
         images = self.game.asset_preloader.image("cell", size=size.to_pix)
 
-        blocked_cells = [0, 4, 6, 7, 8, 9, 10, 40, 55, 54, 23, 55]
+        # blocked_cells = [0, 4, 6, 7, 8, 9, 10, 40, 55, 54, 23, 55]
+        blocked_cells = [Hex(0, 0), Hex(1, -1)]
 
         for index, cell in enumerate(self.grid.cells):
             cell_sprite = CellSprite(images, cell)
-            if index in blocked_cells:
+            if cell in blocked_cells:
                 cell_sprite.cell.is_blocked = True
             self.cell_sprites.append(cell_sprite)
             self.cell_sprites_group.add(cell_sprite)

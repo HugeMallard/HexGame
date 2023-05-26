@@ -9,14 +9,10 @@ from typing import Optional
 
 from .grid import Grid
 from .hex import Hex
+from .hex_math import HexMath
 
 
 LOGGER = logging.getLogger(__file__)
-
-
-def heuristic(a: Hex, b: Hex) -> int:
-    # Manhattan distance on a square grid
-    return int(abs(a.q - b.q) + abs(a.r - b.r))
 
 
 @dataclass(order=True)
@@ -36,6 +32,10 @@ def find_path(grid: Grid, start: Hex, goal: Hex) -> Dict[Hex, Optional[Hex]]:
     came_from[start] = None
     cost_so_far[start] = 0
 
+    # If goal is blocked, there is no path
+    if goal.is_blocked:
+        return came_from
+
     while not frontier.empty():
         current = frontier.get()
         if isinstance(current, PrioritizedItem):
@@ -50,8 +50,8 @@ def find_path(grid: Grid, start: Hex, goal: Hex) -> Dict[Hex, Optional[Hex]]:
             new_cost = cost_so_far[current] + next.cost
             if next not in cost_so_far or new_cost < cost_so_far[next]:
                 cost_so_far[next] = new_cost
-                priority = new_cost + heuristic(goal, next)
-                frontier.put(PrioritizedItem(item=next, priority=priority))
+                priority = new_cost + HexMath.distance(goal, next)
+                frontier.put(PrioritizedItem(item=next, priority=int(priority)))
                 came_from[next] = current
 
     return came_from

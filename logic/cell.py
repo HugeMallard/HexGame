@@ -12,7 +12,7 @@ class Cell(Hex):
     One cell in the grid
     """
 
-    def __init__(self, q: int, r: int, s: int, h: float, w: float, grid_centre: Coord):
+    def __init__(self, q: int, r: int, h: float, w: float, grid_centre: Coord):
         if h < 0:
             raise ValueError(f"Cell height must be a positive number but received {h}")
         if w < 0:
@@ -20,7 +20,7 @@ class Cell(Hex):
         self.height = h  # in pixels
         self.width = w  # in pixels
         self.grid_centre = grid_centre  # in pixels
-        super().__init__(q, r, s)
+        super().__init__(q, r)
 
     @property
     def centre(self) -> Coord:
@@ -62,4 +62,3 @@ class Cell(Hex):
             raise NotImplementedError
         self.q = hex.q
         self.r = hex.r
-        self.s = hex.s

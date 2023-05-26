@@ -7,22 +7,22 @@ from .hex import Hex
 
 LOGGER = logging.getLogger(__file__)
 
-LEFT = Hex(-1, 0, +1)  # 0
-TOP_LEFT = Hex(0, -1, +1)  # 1
-TOP_RIGHT = Hex(+1, -1, 0)  # 2
-RIGHT = Hex(+1, 0, -1)  # 3
-BOT_RIGHT = Hex(0, +1, -1)  # 4
-BOT_LEFT = Hex(-1, +1, 0)  # 5
+LEFT = Hex(-1, 0)  # 0
+TOP_LEFT = Hex(0, -1)  # 1
+TOP_RIGHT = Hex(1, -1)  # 2
+RIGHT = Hex(1, 0)  # 3
+BOT_RIGHT = Hex(0, 1)  # 4
+BOT_LEFT = Hex(-1, 1)  # 5
 
 direction_vectors = [LEFT, TOP_LEFT, TOP_RIGHT, RIGHT, BOT_RIGHT, BOT_LEFT]
 
 diagonal_vectors = [
-    Hex(-1, -1, +2),
-    Hex(+1, -2, +1),
-    Hex(+2, -1, -1),
-    Hex(+1, +1, -2),
-    Hex(-1, +2, -1),
-    Hex(-2, +1, +1),
+    Hex(-1, -1),
+    Hex(1, -2),
+    Hex(2, -1),
+    Hex(1, 1),
+    Hex(-1, 2),
+    Hex(-2, 1),
 ]
 
 
@@ -61,10 +61,8 @@ class HexMath(object):
             q = -r - s
         elif r_diff > s_diff:
             r = -q - s
-        else:
-            s = -q - r
 
-        return Hex(q, r, s)
+        return Hex(q, r)
 
     @classmethod
     def lerp(cls, a: float, b: float, t: float) -> float:  # for floats
@@ -75,12 +73,11 @@ class HexMath(object):
         return Hex(
             cls.lerp(hex_a.q, hex_b.q, t),
             cls.lerp(hex_a.r, hex_b.r, t),
-            cls.lerp(hex_a.s, hex_b.s, t),
         )
 
     @classmethod
     def hex_line_draw(cls, hex_a: Hex, hex_b: Hex) -> List[Hex]:
-        epsilon = Hex(1e-3, -3e-3, 2e-3)  # Nudges line in a direction
+        epsilon = Hex(1e-3, -3e-3)  # Nudges line in a direction
         start = hex_a + epsilon
         end = hex_b + epsilon
 

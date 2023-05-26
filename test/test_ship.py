@@ -8,8 +8,8 @@ from logic import Ship
 @pytest.mark.parametrize(  # type: ignore
     "cell_start,cell_end",
     [
-        (Hex(0, 0, 0), Hex(1, 0, -1)),
-        (Hex(3, -4, 1), Hex(4, 2, -6)),
+        (Hex(0, 0), Hex(1, 0)),
+        (Hex(3, -4), Hex(4, 2)),
     ],
 )
 def test_ship_movement(cell_start, cell_end) -> None:

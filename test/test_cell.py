@@ -6,22 +6,20 @@ from logic import Cell
 
 
 @pytest.mark.parametrize(  # type: ignore
-    "q,r,s,h,w,x,y",
+    "q,r,h,w,x,y",
     [
-        (0, 0, 0, 60, 0, 0, 0),
-        (1, -1, 0, 60, 51.96, 25.98, 45),
-        (0, -1, 1, 60, 51.96, -25.98, 45),
-        (0, 1, -1, 60, 51.96, 25.98, -45),
-        (-1, 1, 0, 60, 51.96, -25.98, -45),
-        (1, 0, -1, 60, 51.96, 51.96, 0),
-        (-1, 0, 1, 60, 51.96, -51.96, 0),
+        (0, 0, 60, 0, 0, 0),
+        (1, -1, 60, 51.96, 25.98, 45),
+        (0, -1, 60, 51.96, -25.98, 45),
+        (0, 1, 60, 51.96, 25.98, -45),
+        (-1, 1, 60, 51.96, -25.98, -45),
+        (1, 0, 60, 51.96, 51.96, 0),
+        (-1, 0, 60, 51.96, -51.96, 0),
     ],
 )
-def test_cell_pixel_methods(
-    q: int, r: int, s: int, h: int, w: int, x: int, y: int
-) -> None:
+def test_cell_pixel_methods(q: int, r: int, h: int, w: int, x: int, y: int) -> None:
     grid_centre = Coord(400, 400)
-    cell = Cell(q, r, s, h, w, grid_centre)
+    cell = Cell(q, r, h, w, grid_centre)
     cell_centre = cell.centre
     assert (
         cell_centre.x == x
