@@ -21,7 +21,7 @@ class Hex(object):
             return NotImplemented
         return Hex(q=hex.q - self.q, r=hex.r - self.r, s=hex.s - self.s)  # type: ignore
 
-    def __init__(self, q: int, r: int, s: int):
+    def __init__(self, q: float, r: float, s: float):
         self.q = q
         self.r = r
         self.s = s

@@ -33,6 +33,28 @@ class HexMath(object):
         return hex + diagonal_vectors[direction]
 
     @classmethod
-    def distance(cls, minuend: Hex, subtrahend: Hex) -> int:
+    def distance(cls, minuend: Hex, subtrahend: Hex) -> float:
         difference = minuend - subtrahend
         return max(abs(difference.q), abs(difference.r), abs(difference.s))
+
+    @classmethod
+    def round(cls, frac: Hex) -> Hex:
+        """
+        Takes fractional values for a hex and converts it to the nearest integer hex
+        """
+        q = round(frac.q)
+        r = round(frac.r)
+        s = round(frac.s)
+
+        q_diff = abs(q - frac.q)
+        r_diff = abs(r - frac.r)
+        s_diff = abs(s - frac.s)
+
+        if q_diff > r_diff and q_diff > s_diff:
+            q = -r - s
+        elif r_diff > s_diff:
+            r = -q - s
+        else:
+            s = -q - r
+
+        return Hex(q, r, s)
