@@ -3,10 +3,11 @@ import logging
 import pytest
 
 from constants import Coord
+from logic import find_path
+from logic import get_path
 from logic import Grid
 from logic import Hex
 from logic import HexMath
-from logic import pathfinding
 
 LOGGER = logging.getLogger(__file__)
 
@@ -21,19 +22,9 @@ def test_pathfinding() -> None:
     start = Hex(-1, 0, 1)
     end = Hex(1, 0, -1)
 
-    came_from = pathfinding(grid, start, end)
+    came_from = find_path(grid, start, end)
+    path = get_path(start, end, came_from)
 
-    # LOGGER.warning(path)
-    path = [end]
-
-    hex = end
-    count = 0
-    while hex != start:
-        count += 1
-        hex = came_from[hex]  # type: ignore
-        path.insert(0, hex)
-
-    assert count == 3
     assert len(path) == 4
     assert path[0] == start
     assert path[1] == Hex(0, -1, 1)

@@ -6,6 +6,8 @@ import pygame
 
 from .cell_sprite import CellSprite
 from constants import Coord
+from logic import find_path
+from logic import get_path
 from logic import Grid
 from logic import HexMath
 
@@ -44,8 +46,12 @@ class GridSprite(pygame.sprite.Sprite):
         size = self.grid.cells[0].size - Coord(spacing, spacing)
         images = self.game.asset_preloader.image("cell", size=size.to_pix)
 
-        for cell in self.grid.cells:
+        blocked_cells = [0, 4, 6, 7, 8, 9, 10, 40, 55, 54, 23, 55]
+
+        for index, cell in enumerate(self.grid.cells):
             cell_sprite = CellSprite(images, cell)
+            if index in blocked_cells:
+                cell_sprite.cell.is_blocked = True
             self.cell_sprites.append(cell_sprite)
             self.cell_sprites_group.add(cell_sprite)
             self.game.all_groups.add(cell_sprite)
@@ -67,7 +73,10 @@ class GridSprite(pygame.sprite.Sprite):
             return
 
         start = self.game.ship_sprite.ship.cell
-        path = HexMath.hex_line_draw(start, hover_cell_sprite.cell)
+        end = hover_cell_sprite.cell
+        # path = HexMath.hex_line_draw(start, hover_cell_sprite.cell)
+        came_from = find_path(self.grid, start, end)
+        path = get_path(start, end, came_from)
 
         for cell_sprite in self.cell_sprites:
             if cell_sprite.is_hover_cell:

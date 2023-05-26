@@ -7,4 +7,6 @@ class Ship(object):
         self.previous_cell = cell  # Previous cell ship was located on
 
     def move_to_cell(self, cell: Cell) -> None:
+        if cell.is_blocked:
+            return
         self.cell = cell

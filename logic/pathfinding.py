@@ -4,6 +4,7 @@ from dataclasses import field
 from queue import PriorityQueue
 from typing import Any
 from typing import Dict
+from typing import List
 from typing import Optional
 
 from .grid import Grid
@@ -27,7 +28,7 @@ class PrioritizedItem:
 PATH_LIMIT = 100
 
 
-def pathfinding(grid: Grid, start: Hex, goal: Hex) -> Dict[Hex, Optional[Hex]]:
+def find_path(grid: Grid, start: Hex, goal: Hex) -> Dict[Hex, Optional[Hex]]:
     frontier = PriorityQueue()  # type: ignore
     frontier.put(PrioritizedItem(item=start, priority=0))
     came_from: Dict[Hex, Optional[Hex]] = dict()
@@ -44,6 +45,8 @@ def pathfinding(grid: Grid, start: Hex, goal: Hex) -> Dict[Hex, Optional[Hex]]:
             break
 
         for next in grid.neighbours(current):
+            if next.is_blocked:
+                continue
             new_cost = cost_so_far[current] + next.cost
             if next not in cost_so_far or new_cost < cost_so_far[next]:
                 cost_so_far[next] = new_cost
@@ -52,3 +55,17 @@ def pathfinding(grid: Grid, start: Hex, goal: Hex) -> Dict[Hex, Optional[Hex]]:
                 came_from[next] = current
 
     return came_from
+
+
+def get_path(start: Hex, end: Hex, came_from: Dict[Hex, Optional[Hex]]) -> List[Hex]:
+    path = [end]
+    hex = end
+    count = 0
+    while hex != start:
+        count += 1
+        hex = came_from.get(hex, None)  # type: ignore
+        if hex is None:
+            return []
+        path.insert(0, hex)
+
+    return path
