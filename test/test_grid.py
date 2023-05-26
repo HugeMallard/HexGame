@@ -4,32 +4,10 @@ import pytest
 
 from constants import Coord
 from constants import SQRT_3
-from logic import BOT_RIGHT
 from logic import Grid
-from logic import GridObject
 from logic import Hex
 
 LOGGER = logging.getLogger(__file__)
-
-
-def test_grid_helper_methods() -> None:
-    hex_one = BOT_RIGHT
-    hex_two = Hex(1, 1, -2)
-    hex_three = Hex(-1, -1, +2)  # Diagonal vector
-
-    assert GridObject.coord_check(hex_one) is True
-    assert GridObject.coord_check(hex_two) is True
-
-    hex_add = GridObject.hex_add(hex_one, hex_two)
-    assert hex_add == Hex(1, 2, -3)
-
-    assert GridObject.hex_neighbor(hex_two, 4) == hex_add
-
-    # Test diagonal
-    hex_add = GridObject.hex_add(hex_two, hex_three)
-    assert hex_add == Hex(0, 0, 0)
-
-    assert GridObject.hex_diagonal_neighbor(hex_add, 0) == hex_three
 
 
 @pytest.mark.parametrize(  # type: ignore

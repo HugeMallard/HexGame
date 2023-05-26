@@ -14,53 +14,8 @@ from constants import SQRT_3
 LOGGER = logging.getLogger(__file__)
 
 
-LEFT = Hex(-1, 0, +1)  # 0
-TOP_LEFT = Hex(0, -1, +1)  # 1
-TOP_RIGHT = Hex(+1, -1, 0)  # 2
-RIGHT = Hex(+1, 0, -1)  # 3
-BOT_RIGHT = Hex(0, +1, -1)  # 4
-BOT_LEFT = Hex(-1, +1, 0)  # 5
-
-hex_direction_vectors = [LEFT, TOP_LEFT, TOP_RIGHT, RIGHT, BOT_RIGHT, BOT_LEFT]
-
-hex_diagonal_vectors = [
-    Hex(-1, -1, +2),
-    Hex(+1, -2, +1),
-    Hex(+2, -1, -1),
-    Hex(+1, +1, -2),
-    Hex(-1, +2, -1),
-    Hex(-2, +1, +1),
-]
-
-
 def check_range(length: int, error: int, size: float) -> bool:
     return length - error <= size <= length + error
-
-
-class GridObject(Hex):
-    """
-    Helper functions for objects on the grid
-    """
-
-    @classmethod
-    def coord_check(cls, hex: Hex) -> bool:
-        return hex.q + hex.r + hex.s == 0
-
-    @classmethod
-    def hex_direction(cls, direction: int) -> Hex:
-        return hex_direction_vectors[direction]
-
-    @classmethod
-    def hex_add(cls, hex: Hex, vec: Hex) -> Hex:
-        return Hex(hex.q + vec.q, hex.r + vec.r, hex.s + vec.s)
-
-    @classmethod
-    def hex_neighbor(cls, hex: Hex, direction: int) -> Hex:
-        return cls.hex_add(hex, cls.hex_direction(direction))
-
-    @classmethod
-    def hex_diagonal_neighbor(cls, hex: Hex, direction: int) -> Hex:
-        return cls.hex_add(hex, hex_diagonal_vectors[direction])
 
 
 class Grid(object):

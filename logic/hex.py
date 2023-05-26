@@ -1,13 +1,25 @@
 from __future__ import annotations
 
-from constants import SQRT_3
-
 
 class Hex(object):
-    def __eq__(self, x: object) -> bool:
-        if not (hasattr(x, "q") and hasattr(x, "r") and hasattr(x, "s")):
+    @classmethod
+    def is_hex(cls, hex: object) -> bool:
+        return hasattr(hex, "q") and hasattr(hex, "r") and hasattr(hex, "s")
+
+    def __eq__(self, hex: object) -> bool:
+        if not self.is_hex(hex):
             return NotImplemented
-        return x.q == self.q and x.r == self.r and x.s == self.s
+        return hex.q == self.q and hex.r == self.r and hex.s == self.s  # type: ignore
+
+    def __add__(self, hex: object) -> Hex:
+        if not self.is_hex(hex):
+            return NotImplemented
+        return Hex(q=hex.q + self.q, r=hex.r + self.r, s=hex.s + self.s)  # type: ignore
+
+    def __sub__(self, hex: object) -> Hex:
+        if not self.is_hex(hex):
+            return NotImplemented
+        return Hex(q=hex.q - self.q, r=hex.r - self.r, s=hex.s - self.s)  # type: ignore
 
     def __init__(self, q: int, r: int, s: int):
         self.q = q
@@ -22,3 +34,6 @@ class Hex(object):
     @property
     def self_coord_check(self) -> bool:
         return self.q + self.r + self.s == 0
+
+    def coord_check(cls, hex: Hex) -> bool:
+        return hex.q + hex.r + hex.s == 0
