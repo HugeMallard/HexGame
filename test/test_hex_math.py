@@ -31,3 +31,29 @@ def test_hex_math_methods() -> None:
 )
 def test_hex_distance(h1: Hex, h2: Hex, d: int) -> None:
     assert HexMath.distance(h1, h2) == d
+
+
+@pytest.mark.parametrize(
+    "h1,h2",
+    [
+        (Hex(1.1, 0, -1.1), Hex(1, 0, -1)),
+        (Hex(5.5, -2.4, -3.1), Hex(5, -2, -3)),
+    ],
+)
+def test_hex_round(h1: Hex, h2: Hex) -> None:
+    assert HexMath.round(h1) == h2
+
+
+@pytest.mark.parametrize(
+    "h1,h2,t,hExpect",
+    [
+        (Hex(-1, 0, +1), Hex(1, 0, -1), 0.5, Hex(0, 0, 0)),
+        (Hex(-1, 0, +1), Hex(1, 0, -1), 0, Hex(-1, 0, 1)),
+        (Hex(-1, 0, +1), Hex(1, 0, -1), 1, Hex(1, 0, -1)),
+        (Hex(-2, -1, 3), Hex(2, 0, -2), 0.2, Hex(-1.2, -0.8, 2.0)),
+        (Hex(-2, -1, 3), Hex(2, 0, -2), 0.5, Hex(0, -0.5, 0.5)),
+        (Hex(-2, -1, 3), Hex(2, 0, -2), 0.7, Hex(0.8, -0.3, -0.5)),
+    ],
+)
+def test_hex_lerp(h1: Hex, h2: Hex, t: float, hExpect: Hex) -> None:
+    assert HexMath.hex_lerp(h1, h2, t) == hExpect

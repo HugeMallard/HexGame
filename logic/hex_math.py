@@ -1,3 +1,5 @@
+from typing import List
+
 from .hex import Hex
 
 LEFT = Hex(-1, 0, +1)  # 0
@@ -58,3 +60,24 @@ class HexMath(object):
             s = -q - r
 
         return Hex(q, r, s)
+
+    @classmethod
+    def lerp(cls, a: float, b: float, t: float) -> float:  # for floats
+        return round(a + (b - a) * t, 4)
+
+    @classmethod
+    def hex_lerp(cls, hex_a: Hex, hex_b: Hex, t: float) -> Hex:  # for hexes
+        return Hex(
+            cls.lerp(hex_a.q, hex_b.q, t),
+            cls.lerp(hex_a.r, hex_b.r, t),
+            cls.lerp(hex_a.s, hex_b.s, t),
+        )
+
+    @classmethod
+    def hex_line_draw(cls, hex_a: Hex, hex_b: Hex) -> List[Hex]:
+        num_hexes = cls.distance(hex_a, hex_b)
+        results = []
+        for i in range(int(num_hexes)):
+            hex_lerp = cls.hex_lerp(hex_a, hex_b, 1.0 / num_hexes * i)
+            results.append(cls.round(hex_lerp))
+        return results

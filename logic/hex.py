@@ -31,6 +31,12 @@ class Hex(object):
                 f"Tried to create a cube with invalid coords: ({self.q} {self.r} {self.s})"
             )
 
+    def __str__(self) -> str:
+        return f"Hex({self.q},{self.r},{self.s})"
+
+    def __repr__(self) -> str:
+        return f"Hex(q={self.q},r={self.r},s={self.s})"
+
     @property
     def self_coord_check(self) -> bool:
         return self.q + self.r + self.s == 0
