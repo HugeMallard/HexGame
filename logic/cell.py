@@ -1,7 +1,6 @@
 from .hex import Hex
 from constants import Coord
 from constants import DEFAULT_RESOLUTION
-from constants import SQRT_3
 
 
 GRID_ZERO = [int(DEFAULT_RESOLUTION[0] / 2), int(DEFAULT_RESOLUTION[1]) / 2]
@@ -21,7 +20,6 @@ class Cell(Hex):
         self.height = h  # in pixels
         self.width = w  # in pixels
         self.grid_centre = grid_centre  # in pixels
-        self.image_index = 0
         super().__init__(q, r, s)
 
     @property

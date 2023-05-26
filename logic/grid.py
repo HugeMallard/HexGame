@@ -7,6 +7,7 @@ from typing import Tuple
 
 from .cell import Cell
 from .hex import Hex
+from .hex_math import HexMath
 from constants import Coord
 from constants import SQRT_3
 
@@ -117,7 +118,7 @@ class Grid(object):
         return x_in_range or y_in_range
 
     def generate(self) -> None:
-        self.cells.clear()
+        self.cells = []
         w, h = self.cell_dimensions
         for q in range(-self.size, self.size + 1):  # q
             for r in range(-self.size, self.size + 1):  # r
@@ -125,3 +126,12 @@ class Grid(object):
                     if q + r + s == 0:
                         cell = Cell(q, r, s, h, w, grid_centre=self.centre)
                         self.cells.append(cell)
+
+    def neighbours(self, hex: Hex) -> List[Cell]:
+        neighbours = []
+        for dir in range(0, 6):
+            neighbour = HexMath.neighbour(hex, dir)
+            cell = self.get_cell(neighbour)
+            if cell:
+                neighbours.append(cell)
+        return neighbours

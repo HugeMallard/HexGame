@@ -21,10 +21,14 @@ class Hex(object):
             return NotImplemented
         return Hex(q=hex.q - self.q, r=hex.r - self.r, s=hex.s - self.s)  # type: ignore
 
+    def __hash__(self) -> int:
+        return hash(repr(self))
+
     def __init__(self, q: float, r: float, s: float):
-        self.q = q
-        self.r = r
-        self.s = s
+        self.q = round(q, 4)
+        self.r = round(r, 4)
+        self.s = round(s, 4)
+        self.is_blocked = False  # Whether to include in path calcs or not
 
         if not self.self_coord_check:
             raise ValueError(
@@ -39,7 +43,13 @@ class Hex(object):
 
     @property
     def self_coord_check(self) -> bool:
-        return self.q + self.r + self.s == 0
+        return round(self.q + self.r + self.s, 4) == 0
 
     def coord_check(cls, hex: Hex) -> bool:
         return hex.q + hex.r + hex.s == 0
+
+    @property
+    def cost(self) -> int:
+        if self.is_blocked:
+            return 99
+        return 1

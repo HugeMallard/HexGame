@@ -1,6 +1,11 @@
+import logging
 from typing import List
+from typing import Optional
 
+from .cell import Cell
 from .hex import Hex
+
+LOGGER = logging.getLogger(__file__)
 
 LEFT = Hex(-1, 0, +1)  # 0
 TOP_LEFT = Hex(0, -1, +1)  # 1
@@ -27,7 +32,7 @@ class HexMath(object):
         return direction_vectors[direction]
 
     @classmethod
-    def neighbor(cls, hex: Hex, direction: int) -> Hex:
+    def neighbour(cls, hex: Hex, direction: int) -> Hex:
         return hex + cls.direction(direction)
 
     @classmethod
@@ -75,9 +80,42 @@ class HexMath(object):
 
     @classmethod
     def hex_line_draw(cls, hex_a: Hex, hex_b: Hex) -> List[Hex]:
-        num_hexes = cls.distance(hex_a, hex_b)
+        epsilon = Hex(1e-3, -3e-3, 2e-3)  # Nudges line in a direction
+        start = hex_a + epsilon
+        end = hex_b + epsilon
+
+        num_hexes = cls.distance(start, end)
+        if num_hexes == 0:
+            return [hex_a, hex_b]
         results = []
-        for i in range(int(num_hexes)):
-            hex_lerp = cls.hex_lerp(hex_a, hex_b, 1.0 / num_hexes * i)
+        for i in range(int(num_hexes) + 1):
+            hex_lerp = cls.hex_lerp(start, end, 1.0 / num_hexes * i)
             results.append(cls.round(hex_lerp))
         return results
+
+    @classmethod
+    def hex_reachable(
+        cls, start: Hex, movement: int, hex_list: List[Cell]
+    ) -> List[Hex]:
+        visited: List[Hex] = [start]  # set of hexes
+        fringes: List[List[Hex]] = []  # array of arrays of hexes
+        fringes.append([start])
+
+        for k in range(1, movement + 1):
+            fringes.append([])
+            for hex in fringes[k - 1]:
+                for dir in range(0, 6):
+                    neighbour = cls.neighbour(hex, dir)
+                    cell = cls.get_hex_from_cells(neighbour, hex_list)
+                    blocked = cell.is_blocked if cell else False
+                    if neighbour not in visited and not blocked:
+                        visited.append(neighbour)
+                        fringes[k].append(neighbour)
+        return visited
+
+    @classmethod
+    def get_hex_from_cells(cls, hex: Hex, hex_list: List[Cell]) -> Optional[Hex]:
+        for h in hex_list:
+            if h == hex:
+                return h
+        return None

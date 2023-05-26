@@ -1,7 +1,14 @@
+import logging
+from typing import List
+
 import pytest
 
+from constants import Coord
+from logic import Grid
 from logic import Hex
 from logic import HexMath
+
+LOGGER = logging.getLogger(__file__)
 
 
 def test_hex_math_methods() -> None:
@@ -12,7 +19,7 @@ def test_hex_math_methods() -> None:
     hex_add = hex_one + hex_two
     assert hex_add == Hex(1, 2, -3)
 
-    assert HexMath.neighbor(hex_two, 4) == hex_add
+    assert HexMath.neighbour(hex_two, 4) == hex_add
 
     # Test diagonal
     hex_add = hex_two + hex_three
@@ -57,3 +64,36 @@ def test_hex_round(h1: Hex, h2: Hex) -> None:
 )
 def test_hex_lerp(h1: Hex, h2: Hex, t: float, hExpect: Hex) -> None:
     assert HexMath.hex_lerp(h1, h2, t) == hExpect
+
+
+@pytest.mark.parametrize(
+    "h1,h2,between",
+    [
+        (Hex(-1, 0, 1), Hex(1, 0, -1), [Hex(0, 0, 0)]),
+        (
+            Hex(-2, -1, 3),
+            Hex(2, 0, -2),
+            [Hex(-1, -1, 2), Hex(0, -1, 1), Hex(0, 0, 0), Hex(1, 0, -1)],
+        ),
+    ],
+)
+def test_hex_line_draw(h1: Hex, h2: Hex, between: List[Hex]) -> None:
+    hexes = HexMath.hex_line_draw(h1, h2)
+    results = [h1] + between + [h2]
+    assert len(hexes) == len(results)
+    assert [hex in results for hex in hexes]
+
+
+def test_hex_reachable() -> None:
+    grid = Grid(2, Coord(300, 300), Coord(150, 150), 1)
+    grid.generate()
+
+    # Make the centre cell blocked
+    grid.get_cell(Hex(0, 0, 0)).is_blocked = True  # type: ignore
+
+    start = Hex(-1, 0, 1)
+    reachable = HexMath.hex_reachable(start, 1, grid.cells)
+    assert len(reachable) == 6
+
+    reachable = HexMath.hex_reachable(start, 2, grid.cells)
+    assert len(reachable) == 17
