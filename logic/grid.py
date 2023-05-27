@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Tuple
@@ -39,7 +40,8 @@ class Grid(object):
         self.size = size
         self.centre = centre
         self.skew = skew
-        self.cells: List[Cell] = []
+
+        self.cells: Dict[float, Cell] = {}
 
         # Create grid
         self.size = size
@@ -74,14 +76,17 @@ class Grid(object):
         return "width" if self.calc_height < self.cell_height else "height"
 
     def get_cell(self, hex: Hex) -> Optional[Cell]:
-        match = [c for c in self.cells if c == hex]
-        if not match:
-            return None
-        return match[0]
+        return self.cells.get(hash(hex), None)
+
+    def get_cells(self) -> List[Cell]:
+        """
+        List of cells ordered by render priority (render top first)
+        """
+        return sorted(list(self.cells.values()), key=lambda a: (a.r, a.q))
 
     @property
     def num_cells(self) -> int:
-        return len(self.cells)
+        return len(self.cells.keys())
 
     @property
     def expected_num_cells(self) -> int:
@@ -118,14 +123,14 @@ class Grid(object):
         return x_in_range or y_in_range
 
     def generate(self) -> None:
-        self.cells = []
+        self.cells = {}
         w, h = self.cell_dimensions
         for q in range(-self.size, self.size + 1):  # q
             for r in range(-self.size, self.size + 1):  # r
                 for s in range(-self.size, self.size + 1):  # s
                     if q + r + s == 0:
                         cell = Cell(q, r, h, w, grid_centre=self.centre)
-                        self.cells.append(cell)
+                        self.cells[hash(cell)] = cell
 
     def neighbours(self, hex: Hex) -> List[Cell]:
         neighbours = []

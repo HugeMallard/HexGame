@@ -31,7 +31,7 @@ def test_grid_generation(
     grid.generate()
 
     assert grid.check_num_cells
-    assert len(grid.cells) == num_cells
+    assert len(grid.cells.keys()) == num_cells
 
     assert grid.check_area_coverage
     assert grid.bounding_dimension == dim
@@ -82,3 +82,23 @@ def test_get_grid_cell() -> None:
 
     cell_missing = Hex(10, 10)
     assert grid.get_cell(cell_missing) is None
+
+
+def test_get_grid_cells() -> None:
+    # Make sure grid cells are returned in order of their r then their q value
+    grid = Grid(2, Coord(1000, 1000), Coord(500, 500), 1)
+
+    grid.generate()
+    assert grid.num_cells == 19
+
+    sorted_cells = grid.get_cells()
+
+    previous_r: float = -3
+    previous_q: float = -3
+    for cell in sorted_cells:
+        if cell.r > previous_r:
+            previous_q = -3
+        assert cell.r >= previous_r, f"Cell {cell} is ordered incorrectly by r"
+        assert cell.q >= previous_q, f"Cell {cell} is ordered incorrectly by q"
+        previous_r = cell.r
+        previous_q = cell.q

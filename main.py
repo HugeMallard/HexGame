@@ -57,7 +57,7 @@ def main(winstyle: int = 0) -> None:
     grid = Grid(8, bounding_rect=size, centre=centre, skew=0.85)
     grid.generate()
 
-    ship = Ship(grid.get_cell(Hex(-1, -2)))  # type: ignore
+    ship = Ship(grid.get_cell(Hex(0, -2)))  # type: ignore
 
     moon = PlanetSprite(game, grid.get_cell(Hex(0, 0)))  # type: ignore
 

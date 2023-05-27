@@ -29,7 +29,7 @@ class Cell(Hex):
         """
         h = self.height
         w = self.width
-        y = h * -self.r * 3 / 4
+        y = h * self.r * 3 / 4
         x = w * (-self.r / 2 - self.s)
         return Coord(x=x, y=y)
 

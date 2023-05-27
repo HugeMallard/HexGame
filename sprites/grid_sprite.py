@@ -50,7 +50,7 @@ class GridSprite(pygame.sprite.Sprite):
         self.cell_sprites = []
 
         spacing = 7
-        size = self.grid.cells[0].size - Coord(spacing, spacing)
+        size = self.grid.cells[hash(Hex(0, 0))].size - Coord(spacing, spacing)
         images = self.game.asset_preloader.image("cell", size=size.to_pix)
 
         # blocked_cells = [0, 4, 6, 7, 8, 9, 10, 40, 55, 54, 23, 55]
@@ -77,7 +77,7 @@ class GridSprite(pygame.sprite.Sprite):
             Hex(-1, 0),
         ]
 
-        for cell in self.grid.cells:
+        for cell in self.grid.get_cells():
             cell_sprite = CellSprite(images, cell)
             if cell in blocked_cells:
                 cell_sprite.cell.is_blocked = True
@@ -115,7 +115,7 @@ class GridSprite(pygame.sprite.Sprite):
 
         visited = self.previous_visited or []
         if start != self.previous_start:
-            visited = HexMath.hex_reachable(start, movement, self.grid.cells)  # type: ignore
+            visited = HexMath.hex_reachable(start, movement, self.grid.get_cells())  # type: ignore
             self.previous_visited = visited
 
         if end in visited:
