@@ -11,6 +11,7 @@ BASE = 0
 HOVER = 1
 ON_PATH = 2
 BLOCKED = 3
+IN_RANGE = 4
 
 
 class CellSprite(pygame.sprite.Sprite):
@@ -29,8 +30,10 @@ class CellSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.cell.centre_from_grid.to_pix)
 
         self.is_hover_cell = False
+        self.is_in_move_range = False
         self.is_path_cell = False
         self.is_blocked = False
+        self.is_hidden = False
 
     def cursor_on_cell(self, pos: Tuple[float, float]) -> bool:
         pos_in_mask = pos[0] - self.rect.x, pos[1] - self.rect.y
@@ -40,11 +43,14 @@ class CellSprite(pygame.sprite.Sprite):
         """
         Use the second image (lighter colour) if mouse is hovering over the cell
         """
+
         image_index = 0
-        if self.is_hover_cell:
-            image_index = 1
+        if self.is_in_move_range:
+            image_index = 4
         if self.is_path_cell:
             image_index = 2
+        if self.is_hover_cell:
+            image_index = 1
         if self.cell.is_blocked:
             image_index = 3
         if image_index != self.image_index:

@@ -88,6 +88,8 @@ class Game(object):
     def draw_grid(self, grid: Grid) -> None:
         self.grid_sprite = GridSprite(self, grid)
         self.all_groups.add(self.grid_sprite)
+
+    def draw_cells(self) -> None:
         self.grid_sprite.draw_cells()
 
     def draw_ship(self, ship: Ship) -> None:
@@ -97,5 +99,5 @@ class Game(object):
     def check_clicks(self, pos: Tuple[float, float]) -> None:
         # Get the cell the click occured in
         for cell_sprite in self.grid_sprite.cell_sprites:
-            if cell_sprite.cursor_on_cell(pos):
+            if cell_sprite.cursor_on_cell(pos) and cell_sprite.is_in_move_range:
                 self.ship_sprite.ship.move_to_cell(cell_sprite.cell)
