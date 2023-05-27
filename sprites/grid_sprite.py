@@ -39,8 +39,8 @@ class GridSprite(pygame.sprite.Sprite):
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect(center=self.grid.centre.to_pix)
 
-        self.previous_start: Optional[CellSprite] = None
-        self.previous_end: Optional[CellSprite] = None
+        self.previous_start: Optional[Cell] = None
+        self.previous_end: Optional[Cell] = None
         self.previous_visited: Optional[List[Cell]] = None
 
     def draw_cells(self) -> None:
@@ -103,10 +103,8 @@ class GridSprite(pygame.sprite.Sprite):
         if not hasattr(self.game, "ship_sprite"):
             return
 
-        start = self.game.ship_sprite.ship
-        end = hover_cell_sprite
-        start_cell = start.cell
-        end_cell = end.cell
+        start = self.game.ship_sprite.ship.cell
+        end = hover_cell_sprite.cell
 
         if start == self.previous_start and end == self.previous_end:
             return
@@ -117,12 +115,12 @@ class GridSprite(pygame.sprite.Sprite):
 
         visited = self.previous_visited or []
         if start != self.previous_start:
-            visited = HexMath.hex_reachable(start_cell, movement, self.grid.cells)  # type: ignore
+            visited = HexMath.hex_reachable(start, movement, self.grid.cells)  # type: ignore
             self.previous_visited = visited
 
-        if end_cell in visited:
-            came_from = find_path(self.grid, start_cell, end_cell)
-            path = get_path(start_cell, end_cell, came_from)
+        if end in visited:
+            came_from = find_path(self.grid, start, end)
+            path = get_path(start, end, came_from)
         else:
             path = []
 
