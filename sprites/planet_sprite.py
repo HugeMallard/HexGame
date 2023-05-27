@@ -13,7 +13,7 @@ class PlanetSprite(pygame.sprite.Sprite):
         self.cell = cell
 
         # Make it cover 3 cells
-        size = self.cell.size * Coord(2.6, 2.4)
+        size = self.cell.size * Coord(2.9, 2.65)
         images = self.game.asset_preloader.image(
             "moon", size=size.to_pix, force_size=True
         )

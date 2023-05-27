@@ -6,6 +6,7 @@ from typing import Optional
 import pygame
 
 from .cell_sprite import CellSprite
+from .planet_sprite import PlanetSprite
 from constants import Coord
 from logic import Cell
 from logic import find_path
@@ -30,6 +31,7 @@ class GridSprite(pygame.sprite.Sprite):
         self.grid = grid
         self.cell_sprites: List[CellSprite] = []
         self.cell_sprites_group = pygame.sprite.Group()
+        self.object_sprite: Optional[PlanetSprite] = None
 
         images = self.game.asset_preloader.image(
             "intro_background", size=self.game.resolution
@@ -52,7 +54,7 @@ class GridSprite(pygame.sprite.Sprite):
         spacing = 7
         size = self.grid.cells[hash(Hex(0, 0))].size - Coord(spacing, spacing)
         images = self.game.asset_preloader.image("cell", size=size.to_pix)
-
+        moon = PlanetSprite(self.game, self.grid.get_cell(Hex(0, 0)))  # type: ignore
         # blocked_cells = [0, 4, 6, 7, 8, 9, 10, 40, 55, 54, 23, 55]
         blocked_cells = [
             Hex(1, 0),
@@ -76,7 +78,7 @@ class GridSprite(pygame.sprite.Sprite):
             Hex(0, 0),
             Hex(-1, 0),
         ]
-
+        self.object_sprite = None
         for cell in self.grid.get_cells():
             cell_sprite = CellSprite(images, cell)
             if cell in blocked_cells:
@@ -84,6 +86,9 @@ class GridSprite(pygame.sprite.Sprite):
             if cell in hidden_cells:
                 cell_sprite.is_hidden = True
                 continue
+            if cell.r == 0:
+                self.object_sprite = moon
+                self.game.all_groups.add(self.object_sprite)
             self.cell_sprites.append(cell_sprite)
             self.cell_sprites_group.add(cell_sprite)
             self.game.all_groups.add(cell_sprite)

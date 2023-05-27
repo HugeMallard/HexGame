@@ -9,7 +9,6 @@ from game import Game
 from logic import Grid
 from logic import Hex
 from logic import Ship
-from sprites import PlanetSprite
 from steamworks import STEAMWORKS
 from utilities import catch_error
 from utilities import draw_open_gl
@@ -59,10 +58,7 @@ def main(winstyle: int = 0) -> None:
 
     ship = Ship(grid.get_cell(Hex(0, -2)))  # type: ignore
 
-    moon = PlanetSprite(game, grid.get_cell(Hex(0, 0)))  # type: ignore
-
     game.draw_grid(grid)
-    game.all_groups.add(moon)
     game.draw_cells()
     game.draw_ship(ship)
 

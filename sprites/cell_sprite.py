@@ -1,3 +1,4 @@
+import logging
 from typing import List
 from typing import Tuple
 
@@ -12,6 +13,9 @@ HOVER = 1
 ON_PATH = 2
 BLOCKED = 3
 IN_RANGE = 4
+
+
+LOGGER = logging.getLogger(__file__)
 
 
 class CellSprite(pygame.sprite.Sprite):
