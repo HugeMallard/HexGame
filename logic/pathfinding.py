@@ -57,7 +57,7 @@ def find_path(grid: Grid, start: Hex, goal: Hex) -> Dict[Hex, Optional[Hex]]:
     return came_from
 
 
-def get_path(start: Hex, end: Hex, came_from: Dict[Hex, Optional[Hex]]) -> List[Hex]:
+def get_path(came_from: Dict[Hex, Optional[Hex]], start: Hex, end: Hex) -> List[Hex]:
     path = [end]
     hex = end
     count = 0

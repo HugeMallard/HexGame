@@ -24,7 +24,9 @@ LOGGER = logging.getLogger(__file__)
 def test_grid_generation(
     size: int, x: int, y: int, side: int, num_cells: int, dim: str
 ) -> None:
-    grid = Grid(size, Coord(x, y), Coord(500, 500))
+    size_pix = Coord(x, y)
+    centre = Coord(round(x / 2), round(y / 2))
+    grid = Grid(size, size_pix, centre)
 
     assert int(grid.cell_height / 2) == side
 
@@ -35,6 +37,9 @@ def test_grid_generation(
 
     assert grid.check_area_coverage
     assert grid.bounding_dimension == dim
+
+    # Check coords of centre cell
+    assert grid.get_cell(Hex(0, 0)).to_pix == centre.to_pix  # type: ignore
 
 
 @pytest.mark.parametrize(  # type: ignore
@@ -52,11 +57,11 @@ def test_skew_grid_generation(
     assert grid.cell_height == h
     assert grid.cell_width == w
 
-    calc_height = 2 * w * skew / SQRT_3
-    assert grid.calc_height == calc_height
+    calc_height = round(2 * w * skew / SQRT_3, 3)
+    assert round(grid.calc_height, 3) == calc_height
 
-    calc_width = (h * SQRT_3) / (2 * skew)
-    assert grid.calc_width == calc_width
+    calc_width = round((h * SQRT_3) / (2 * skew), 3)
+    assert round(grid.calc_width, 3) == calc_width
 
     grid.generate()
 

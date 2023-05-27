@@ -31,7 +31,7 @@ class CellSprite(pygame.sprite.Sprite):
         self.image_index = 0
         self.image = self.images[self.image_index]
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect(center=self.cell.centre_from_grid.to_pix)
+        self.rect = self.image.get_rect(center=self.cell.to_pix)
 
         self.is_hover_cell = False
         self.is_in_move_range = False
@@ -60,4 +60,4 @@ class CellSprite(pygame.sprite.Sprite):
         if image_index != self.image_index:
             self.image_index = image_index
             self.image = self.images[self.image_index]
-            self.rect = self.image.get_rect(center=self.cell.centre_from_grid.to_pix)
+            self.rect = self.image.get_rect(center=self.cell.to_pix)

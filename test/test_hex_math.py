@@ -91,7 +91,7 @@ def test_hex_reachable() -> None:
     # Make the centre cell blocked
     grid.get_cell(Hex(0, 0)).is_blocked = True  # type: ignore
 
-    LOGGER.warn(grid.get_cells())
+    LOGGER.warning(grid.get_cells())
 
     start = Hex(-1, 0)
     reachable = HexMath.hex_reachable(start, 1, grid.get_cells())

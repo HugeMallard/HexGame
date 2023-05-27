@@ -2,7 +2,6 @@ from typing import Any
 
 import pygame
 
-from constants import Coord
 from logic import Ship
 
 
@@ -18,11 +17,10 @@ class ShipSprite(pygame.sprite.Sprite):
         self.images = images
         self.image_index = 0
         self.image = self.images[self.image_index]
-        self.rect = self.image.get_rect(center=self.ship.cell.centre_from_grid.to_pix)
+        self.rect = self.image.get_rect(center=self.ship.cell.to_pix)
 
     def update(self) -> None:
-        if self.ship.previous_cell != self.ship.cell:
-            self.rect = self.image.get_rect(
-                center=self.ship.cell.centre_from_grid.to_pix
-            )
-            self.ship.previous_cell = self.ship.cell
+        cell = self.ship.cell
+        if self.ship.previous_cell != cell:
+            self.rect = self.image.get_rect(center=cell.to_pix)
+            self.ship.previous_cell = cell

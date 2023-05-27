@@ -8,7 +8,7 @@ CONFIG_FILE = "config.ini"
 DEFAULT_FULLSCREEN = False
 DEFAULT_RESOLUTION = (1600, 900)
 DEFAULT_FRAME_RATE = 60
-SQRT_3 = 1.732
+SQRT_3 = 1.732050
 
 
 class Coord(object):
@@ -46,6 +46,12 @@ class Coord(object):
         self.x = x
         self.y = y
 
+    def __str__(self) -> str:
+        return f"Coord({self.x},{self.y})"
+
+    def __repr__(self) -> str:
+        return f"Coord(x={self.x},y={self.y})"
+
     @property
     def pix_x(self) -> int:
         return round(self.x)
@@ -60,7 +66,7 @@ class Coord(object):
 
     @property
     def to_pix(self) -> Tuple[int, int]:
-        return (self.pix_x, self.pix_y)
+        return (round(self.pix_x), round(self.pix_y))
 
 
 class KEY_NAV(Enum):

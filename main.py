@@ -54,9 +54,11 @@ def main(winstyle: int = 0) -> None:
     size = res / 1.2
     centre = round(res / 2)
     grid = Grid(8, bounding_rect=size, centre=centre, skew=0.85)
+    # grid = Grid(5, bounding_rect=size, centre=centre, skew=1)
     grid.generate()
 
     ship = Ship(grid.get_cell(Hex(0, -2)))  # type: ignore
+    ship.set_reachable(grid)
 
     game.draw_grid(grid)
     game.draw_cells()

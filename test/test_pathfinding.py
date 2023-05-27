@@ -23,7 +23,7 @@ def test_pathfinding() -> None:
     end = Hex(1, 0)
 
     came_from = find_path(grid, start, end)
-    path = get_path(start, end, came_from)
+    path = get_path(came_from, start, end)
 
     assert len(path) == 4
     assert path[0] == start
@@ -47,7 +47,7 @@ def test_harder_pathfinding() -> None:
     end = Hex(1, 1)
 
     came_from = find_path(grid, start, end)
-    path = get_path(start, end, came_from)
+    path = get_path(came_from, start, end)
 
     assert len(path) == 5
     assert path[0] == start

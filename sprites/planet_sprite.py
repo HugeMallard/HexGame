@@ -20,4 +20,4 @@ class PlanetSprite(pygame.sprite.Sprite):
         self.images = images
         self.image_index = 0
         self.image = self.images[self.image_index]
-        self.rect = self.image.get_rect(center=self.cell.centre_from_grid.to_pix)
+        self.rect = self.image.get_rect(center=self.cell.to_pix)

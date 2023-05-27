@@ -13,7 +13,6 @@ from logic import find_path
 from logic import get_path
 from logic import Grid
 from logic import Hex
-from logic import HexMath
 
 
 LOGGER = logging.getLogger(__file__)
@@ -53,9 +52,12 @@ class GridSprite(pygame.sprite.Sprite):
 
         spacing = 7
         size = self.grid.cells[hash(Hex(0, 0))].size - Coord(spacing, spacing)
+        # size = self.grid.cells[hash(Hex(0, 0))].size
+
         images = self.game.asset_preloader.image("cell", size=size.to_pix)
         moon = PlanetSprite(self.game, self.grid.get_cell(Hex(0, 0)))  # type: ignore
-        # blocked_cells = [0, 4, 6, 7, 8, 9, 10, 40, 55, 54, 23, 55]
+        # blocked_cells = []
+        # hidden_cells = []
         blocked_cells = [
             Hex(1, 0),
             Hex(0, 1),
@@ -84,6 +86,7 @@ class GridSprite(pygame.sprite.Sprite):
             if cell in blocked_cells:
                 cell_sprite.cell.is_blocked = True
             if cell in hidden_cells:
+                cell_sprite.is_blocked = True
                 cell_sprite.is_hidden = True
                 continue
             if cell.r == 0:
@@ -114,27 +117,19 @@ class GridSprite(pygame.sprite.Sprite):
         if start == self.previous_start and end == self.previous_end:
             return
 
-        # path = HexMath.hex_line_draw(start, hover_cell_sprite.cell)
-        movement = 4
-        # Check if goal is reachable
+        reachable = self.game.ship_sprite.ship.reachable
 
-        visited = self.previous_visited or []
-        if start != self.previous_start:
-            visited = HexMath.hex_reachable(start, movement, self.grid.get_cells())  # type: ignore
-            self.previous_visited = visited
-
-        if end in visited:
+        path = []
+        if end in reachable:
             came_from = find_path(self.grid, start, end)
-            path = get_path(start, end, came_from)
-        else:
-            path = []
+            path = get_path(came_from, start, end)
 
         for cell_sprite in self.cell_sprites:
             if cell_sprite.cell in path:
                 cell_sprite.is_path_cell = True
                 cell_sprite.is_in_move_range = True
                 continue
-            if cell_sprite.cell in visited:
+            if cell_sprite.cell in reachable:
                 cell_sprite.is_in_move_range = True
                 cell_sprite.is_path_cell = False
                 continue

@@ -17,7 +17,10 @@ LOGGER = logging.getLogger(__file__)
 
 
 def check_range(length: int, error: int, size: float) -> bool:
-    return length - error <= size <= length + error
+    return (length - error) <= size <= (length + error)
+
+
+HEX_H_TO_W_RATIO = 1.1547005
 
 
 class Grid(object):
@@ -50,30 +53,35 @@ class Grid(object):
     @property
     def cell_height(self) -> float:
         # Get the height of the cells to fill the grid
-        num_sides_y = (3 * self.size + 2) / 2
-        height = (self.bounding_rect.y) / num_sides_y
-        return height
+        num_sides_y = 3 * self.size + 2
+        height = self.bounding_rect.y / num_sides_y
+        return height * 2
 
     @property
     def cell_width(self) -> float:
         # Get the width of the cell to fill the grid
-        num_sides_x = 2 * self.size + 1
+        num_sides_x = 4 * self.size + 2
         width = self.bounding_rect.x / num_sides_x
-        return width
+        return width * 2
 
     @property
     def calc_height(self) -> float:
         # Calculate the height from the width
-        return 2 * self.cell_width * self.skew / SQRT_3
+        return self.cell_width * self.skew * HEX_H_TO_W_RATIO
+        # return 2 * self.cell_width * self.skew / SQRT_3
 
     @property
     def calc_width(self) -> float:
         # Calculate the width from the height
-        return (self.cell_height * SQRT_3) / (2 * self.skew)
+        return (self.cell_height / self.skew) / HEX_H_TO_W_RATIO
+        # return (self.cell_height * SQRT_3) / (2 * self.skew)
 
     @property
     def bounding_dimension(self) -> str:
-        return "width" if self.calc_height < self.cell_height else "height"
+        if (self.cell_height / self.cell_width) < HEX_H_TO_W_RATIO:
+            return "height"
+        return "width"
+        # return "width" if self.calc_height < self.cell_height else "height"
 
     def get_cell(self, hex: Hex) -> Optional[Cell]:
         return self.cells.get(hash(hex), None)
@@ -129,7 +137,7 @@ class Grid(object):
             for r in range(-self.size, self.size + 1):  # r
                 for s in range(-self.size, self.size + 1):  # s
                     if q + r + s == 0:
-                        cell = Cell(q, r, h, w, grid_centre=self.centre)
+                        cell = Cell(q, r, h, w, grid_centre=self.centre, skew=self.skew)
                         self.cells[hash(cell)] = cell
 
     def neighbours(self, hex: Hex) -> List[Cell]:

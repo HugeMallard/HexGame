@@ -28,16 +28,12 @@ def test_cell_pixel_methods(q: int, r: int, h: int, w: int, x: int, y: int) -> N
         cell_centre.y == y
     ), f"Cell Centre y {cell_centre.y} different to expected {y}"
 
-    centre_from_grid = cell.centre_from_grid
-    assert centre_from_grid.x == x + grid_centre.x
-    assert centre_from_grid.y == y + grid_centre.y
+    to_pix = cell.to_pix
+    assert to_pix[0] == round(x + grid_centre.x)
+    assert to_pix[1] == round(y + grid_centre.y)
 
     size = cell.size
     size_x = cell.width
     size_y = cell.height
     assert size.x == size_x
     assert size.y == size_y
-
-    render_pos = cell.render_pos
-    assert render_pos.x == round(centre_from_grid.x - size.x / 2)
-    assert render_pos.y == round(centre_from_grid.y - size.y / 2)

@@ -101,3 +101,4 @@ class Game(object):
         for cell_sprite in self.grid_sprite.cell_sprites:
             if cell_sprite.cursor_on_cell(pos) and cell_sprite.is_in_move_range:
                 self.ship_sprite.ship.move_to_cell(cell_sprite.cell)
+                self.ship_sprite.ship.set_reachable(self.grid_sprite.grid)
