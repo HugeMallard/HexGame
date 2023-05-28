@@ -43,6 +43,7 @@ class GridSprite(pygame.sprite.Sprite):
         self.previous_start: Optional[Cell] = None
         self.previous_end: Optional[Cell] = None
         self.previous_visited: Optional[List[Cell]] = None
+        self.show_reachable = False
 
     def draw_cells(self) -> None:
         # Draws all cells
@@ -100,41 +101,32 @@ class GridSprite(pygame.sprite.Sprite):
         cursor_pos = pygame.mouse.get_pos()
         hover_cell_sprite = None
         for cell_sprite in self.cell_sprites:
-            if cell_sprite.cursor_on_cell(cursor_pos):
+            cell_sprite.clear_statuses()
+            if cell_sprite.cursor_on_cell(cursor_pos) and not hover_cell_sprite:
                 hover_cell_sprite = cell_sprite
                 cell_sprite.is_hover_cell = True
                 continue
-            cell_sprite.is_hover_cell = False
 
-        if not hover_cell_sprite:
-            return
         if not hasattr(self.game, "ship_sprite"):
             return
 
         start = self.game.ship_sprite.ship.cell
-        end = hover_cell_sprite.cell
-
-        if start == self.previous_start and end == self.previous_end:
-            return
-
-        reachable = self.game.ship_sprite.ship.reachable
 
         path = []
-        if end in reachable:
-            came_from = find_path(self.grid, start, end)
-            path = get_path(came_from, start, end)
+        reachable = self.game.ship_sprite.ship.reachable
+
+        if hover_cell_sprite is not None:
+            end = hover_cell_sprite.cell
+            if end in reachable:
+                came_from = find_path(self.grid, start, end)
+                path = get_path(came_from, start, end)
+            self.previous_end = end
 
         for cell_sprite in self.cell_sprites:
+            if cell_sprite.cell in reachable:
+                cell_sprite.is_in_move_range = self.show_reachable
             if cell_sprite.cell in path:
                 cell_sprite.is_path_cell = True
-                cell_sprite.is_in_move_range = True
                 continue
-            if cell_sprite.cell in reachable:
-                cell_sprite.is_in_move_range = True
-                cell_sprite.is_path_cell = False
-                continue
-            cell_sprite.is_in_move_range = False
-            cell_sprite.is_path_cell = False
 
         self.previous_start = start
-        self.previous_end = end

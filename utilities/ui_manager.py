@@ -13,8 +13,18 @@ def handle_input(game: Any) -> bool:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             game.check_clicks(event.pos)
+            continue
+        elif event.type == pygame.KEYDOWN:
+            if event.key == key_con["FULLSCREEN"]:
+                game.toggle_fullscreen()
+            if event.key == key_con["MENU"]:
+                return False
+
+    keys = pygame.key.get_pressed()
+    game.grid_sprite.show_reachable = keys[key_con["REACHABLE"]]
+
     return True
     # joy_con = game.control_config.joystick_controls
     # for event in pygame.event.get():

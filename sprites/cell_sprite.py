@@ -43,6 +43,11 @@ class CellSprite(pygame.sprite.Sprite):
         pos_in_mask = pos[0] - self.rect.x, pos[1] - self.rect.y
         return self.rect.collidepoint(pos) and self.mask.get_at(pos_in_mask)
 
+    def clear_statuses(self) -> None:
+        self.is_hover_cell = False
+        self.is_in_move_range = False
+        self.is_path_cell = False
+
     def update(self) -> None:
         """
         Use the second image (lighter colour) if mouse is hovering over the cell

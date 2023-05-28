@@ -35,6 +35,7 @@ class ControlConfiguration(object):
             ACCEPT=pygame.K_RETURN,
             FULLSCREEN=pygame.K_f,
             MAP=pygame.K_m,
+            REACHABLE=pygame.K_r,
         ),
         mouse=dict(
             # Mouse

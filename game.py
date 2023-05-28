@@ -4,7 +4,9 @@ from typing import Tuple
 
 import pygame
 from pygame.locals import DOUBLEBUF
+from pygame.locals import FULLSCREEN
 from pygame.locals import OPENGL
+from pygame.locals import RESIZABLE
 
 from constants import Coord
 from constants import DEFAULT_FRAME_RATE
@@ -56,10 +58,7 @@ class Game(object):
         ]
 
         self.SCREENRECT = pygame.Rect(0, 0, self.resolution[0], self.resolution[1])
-        background = pygame.Surface(self.SCREENRECT.size)
         self.draw_screen()
-        self.screen.fill((0, 0, 0))
-        self.background = background
 
         self.control_config = ControlConfiguration()
         self.asset_preloader = AssetPreloader(self)
@@ -69,21 +68,21 @@ class Game(object):
         self.all_groups = pygame.sprite.Group()
 
     def draw_screen(self) -> None:
+        self.winstyle = 1 | OPENGL | DOUBLEBUF | RESIZABLE
         if self.fullscreen:
-            winstyle = self.winstyle | pygame.FULLSCREEN
+            winstyle = self.winstyle | FULLSCREEN
+            # size = (0, 0)
         else:
             winstyle = self.winstyle
-
-        self.winstyle = 1 | OPENGL | DOUBLEBUF
-        if self.fullscreen:
-            winstyle = self.winstyle | pygame.FULLSCREEN
-        else:
-            winstyle = self.winstyle
+        size = self.SCREENRECT.size
         self.bestdepth = pygame.display.mode_ok(self.SCREENRECT.size, winstyle, 32)
 
-        pygame.display.set_mode(self.SCREENRECT.size, winstyle)
+        pygame.display.set_mode(size, winstyle)
         self.screen = pygame.Surface(self.SCREENRECT.size)
         setup_gl(self.SCREENRECT.size[0], self.SCREENRECT.size[1])
+        background = pygame.Surface(self.SCREENRECT.size)
+        self.screen.fill((0, 0, 0))
+        self.background = background
 
     def draw_grid(self, grid: Grid) -> None:
         self.grid_sprite = GridSprite(self, grid)
@@ -99,6 +98,28 @@ class Game(object):
     def check_clicks(self, pos: Tuple[float, float]) -> None:
         # Get the cell the click occured in
         for cell_sprite in self.grid_sprite.cell_sprites:
-            if cell_sprite.cursor_on_cell(pos) and cell_sprite.is_in_move_range:
+            if cell_sprite.cursor_on_cell(pos) and cell_sprite.is_path_cell:
                 self.ship_sprite.ship.move_to_cell(cell_sprite.cell)
                 self.ship_sprite.ship.set_reachable(self.grid_sprite.grid)
+
+    def set_fullscreen(self) -> None:
+        LOGGER.info("Changing to FULLSCREEN")
+        info_object = pygame.display.Info()
+        full_screen_size = (info_object.current_w, info_object.current_h)
+        self.resolution = full_screen_size
+        self.SCREENRECT = pygame.Rect(0, 0, self.resolution[0], self.resolution[1])
+        self.fullscreen = True
+        self.draw_screen()
+
+    def set_windowed(self) -> None:
+        LOGGER.info("Changing to windowed mode")
+        # pygame.display.set_mode(self.SCREENRECT.size, self.winstyle)
+        # self.screen = pygame.Surface(self.SCREENRECT.size)
+        # setup_gl(self.SCREENRECT.size[0], self.SCREENRECT.size[1])
+        self.resolution = DEFAULT_RESOLUTION
+        self.SCREENRECT = pygame.Rect(0, 0, self.resolution[0], self.resolution[1])
+        self.fullscreen = False
+        self.draw_screen()
+
+    def toggle_fullscreen(self) -> None:
+        self.set_fullscreen() if not self.fullscreen else self.set_windowed()
