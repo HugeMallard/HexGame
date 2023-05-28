@@ -129,5 +129,5 @@ class HexMath(object):
         x = pix.x
         y = pix.y
         r = (4 * y) / (3 * h)
-        q = (x - (2 * y) / (3 * h)) / w
+        q = x / w - (2 * y) / (3 * h)
         return cls.round(Hex(q, r))

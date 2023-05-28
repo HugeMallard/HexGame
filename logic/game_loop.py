@@ -4,8 +4,10 @@ from typing import Optional
 from typing import Tuple
 
 from .cell import Cell
+from .hex import Hex
 from .pathfinding import find_path
 from .pathfinding import get_path
+from constants import Coord
 from constants import ENEMY_ATTACK
 from constants import ENEMY_MOVE
 from constants import PLAYER_ATTACK
@@ -37,23 +39,24 @@ class GameLoop(object):
                 return self.game.enemy_sprite.controller
         return None
 
-    def set_cell_status(self) -> None:
+    def set_cell_status(
+        self, start: Cell, end: Cell, reachable: List[Cell], path: List[Hex]
+    ) -> None:
         grid_sprite = self.game.grid_sprite
         ship = self.get_active_ship()
         hover_cell = grid_sprite.hover_cell
-        if hover_cell == grid_sprite.prev_hover_cell:
+
+        if end == self.previous_end:
             return
-        grid_sprite.prev_hover_cell = hover_cell
+        self.previous_end = end
 
-        start = ship.cell if ship else None
-        reachable = ship.reachable if ship else []
-        path = []
+        # start = ship.cell if ship else None
+        # reachable = ship.reachable if ship else []
+        # path = []
 
-        if hover_cell is not None and start:
-            end = hover_cell
-            came_from = find_path(grid_sprite.grid, start, end)
-            path = get_path(came_from, start, end)
-            self.previous_end = end
+        # if end is not None and start:
+        #     # end = hover_cell
+        #     self.previous_end = end
 
         # We need the first movement range cells in the path
         max_path = ship.movement + 1  # type: ignore
@@ -72,25 +75,48 @@ class GameLoop(object):
 
     def check_clicks(self, pos: Tuple[float, float]) -> None:
         game = self.game
-        for cell_sprite in game.grid_sprite.cell_sprites:
-            if cell_sprite.cursor_on_cell(pos):
-                player = game.player_sprite.controller
-                enemy = game.enemy_sprite.controller
-                if self.turn_state == PLAYER_MOVE:
-                    if player.move_to_cell(cell_sprite.cell):
-                        game.grid_sprite.prev_hover_cell = None
-                        enemy.set_reachable(game.grid_sprite.grid)
-                        self.turn_state = ENEMY_MOVE
-                elif self.turn_state == ENEMY_MOVE:
-                    path_cells = [
-                        c.cell
-                        for c in game.grid_sprite.cell_sprites
-                        if c.cell.is_path_cell
-                    ]
-                    game.grid_sprite.prev_hover_cell = None
-                    enemy.move_to_cell(cell_sprite.cell, path_cells)
-                    player.set_reachable(game.grid_sprite.grid)
-                    self.turn_state = PLAYER_MOVE
+        if cell := game.grid_sprite.cell_under_cursor(Coord(*pos)):
+            player = game.player_sprite.controller
+            enemy = game.enemy_sprite.controller
+            if self.turn_state == PLAYER_MOVE:
+                if player.move_to_cell(cell):
+                    self.previous_end = None
+                    enemy.set_reachable(game.grid_sprite.grid)
+                    self.turn_state = ENEMY_MOVE
+
+    def move_enemy(self, cell: Cell) -> None:
+        game = self.game
+        player = game.player_sprite.controller
+        enemy = game.enemy_sprite.controller
+        path_cells = [
+            c.cell for c in self.game.grid_sprite.cell_sprites if c.cell.is_path_cell
+        ]
+        enemy.move_to_cell(cell, path_cells)
+        player.set_reachable(game.grid_sprite.grid)
+        self.turn_state = PLAYER_MOVE
 
     def update(self) -> None:
-        self.set_cell_status()
+        # ship = self.get_active_ship()
+        game = self.game
+        grid_sprite = self.game.grid_sprite
+        player = game.player_sprite.controller
+        enemy = game.enemy_sprite.controller
+
+        if self.turn_state == ENEMY_MOVE:
+            end = player.cell
+            start = enemy.cell
+            reachable = enemy.reachable
+        else:
+            end = grid_sprite.hover_cell
+            start = player.cell
+            reachable = player.reachable
+
+        came_from = {}
+        path = []  # type: ignore
+        if end != self.previous_end and end:
+            came_from = find_path(grid_sprite.grid, start, end)
+            path = get_path(came_from, start, end)
+        self.set_cell_status(start, end, reachable, path)
+
+        if self.turn_state == ENEMY_MOVE:
+            self.move_enemy(end)

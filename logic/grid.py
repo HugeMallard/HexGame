@@ -10,7 +10,6 @@ from .cell import Cell
 from .hex import Hex
 from .hex_math import HexMath
 from constants import Coord
-from constants import SQRT_3
 
 
 LOGGER = logging.getLogger(__file__)
@@ -148,3 +147,9 @@ class Grid(object):
             if cell:
                 neighbours.append(cell)
         return neighbours
+
+    def get_cell_from_pos(self, cursor_pos: Coord) -> Optional[Cell]:
+        pos = cursor_pos - self.centre
+        size = Coord(*self.cell_dimensions)
+        hex = HexMath.to_hex(pos, size)
+        return self.get_cell(hex)

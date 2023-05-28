@@ -53,7 +53,6 @@ class GridSprite(pygame.sprite.Sprite):
         self.cell_sprites: List[CellSprite] = []
         self.cell_sprites_group = pygame.sprite.Group()
         self.hover_cell: Optional[Cell] = None
-        self.prev_hover_cell: Optional[Cell] = None
 
         self.object_sprite: Optional[PlanetSprite] = None
 
@@ -95,20 +94,18 @@ class GridSprite(pygame.sprite.Sprite):
             self.cell_sprites_group.add(cell_sprite)
             self.game.all_groups.add(cell_sprite)
 
+    def cell_under_cursor(self, pos: Optional[Coord] = None) -> Optional[Cell]:
+        if pos is None:
+            pos = Coord(*pygame.mouse.get_pos())
+        # mask_cell = None
+        # for cell_sprite in self.cell_sprites:
+        #     if cell_sprite.cursor_on_cell(pos):
+        #         mask_cell = cell_sprite.cell
+        return self.grid.get_cell_from_pos(pos)
+
     def update(self) -> None:
         if not self.grid.num_cells:
             return
-        cursor_pos = pygame.mouse.get_pos()
-        # pix = (Coord(*cursor_pos) - self.grid.centre)
-        # size = self.grid.cells[hash(Hex(0, 0))].size
-        # hex = HexMath.to_hex(pix, size)
-        # self.hover_cell = self.grid.get_cell(hex)
-
-        # self.hover_cell = None
-        for cell_sprite in self.cell_sprites:
-            if cell_sprite.cursor_on_cell(cursor_pos):
-                self.hover_cell = cell_sprite.cell
-        # LOGGER.warning(f"Hover Cell: {self.hover_cell}")
-        # if test_cell:
-        #     LOGGER.warning(f"Test Cell: {test_cell.cell}")
-        # assert self.hover_cell == test_cell.cell
+        hover_cell = self.cell_under_cursor()
+        if hover_cell:
+            self.hover_cell = hover_cell
