@@ -1,4 +1,5 @@
 from .cell import Cell  # noqa: F401
+from .enemy import Enemy  # noqa: F401
 from .grid import Grid  # noqa: F401
 from .hex import Hex  # noqa: F401
 from .hex_math import HexMath  # noqa: F401

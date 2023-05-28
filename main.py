@@ -6,6 +6,7 @@ import pygame
 from constants import Coord
 from constants import DEFAULT_RESOLUTION
 from game import Game
+from logic import Enemy
 from logic import Grid
 from logic import Hex
 from logic import Ship
@@ -57,7 +58,8 @@ def main(winstyle: int = 0) -> None:
     # grid = Grid(5, bounding_rect=size, centre=centre, skew=1)
     grid.generate()
 
-    ship = Ship(grid.get_cell(Hex(0, -2)))  # type: ignore
+    ship = Ship(grid.get_cell(Hex(-3, -2)))  # type: ignore
+    enemy = Enemy(grid.get_cell(Hex(-3, -2)))  # type: ignore
     ship.set_reachable(grid)
 
     game.draw_grid(grid)

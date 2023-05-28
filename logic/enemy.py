@@ -5,7 +5,7 @@ from .grid import Grid
 from .hex_math import HexMath
 
 
-class Ship(object):
+class Enemy(object):
     def __init__(self, cell: Cell) -> None:
         self.cell = cell  # Cell ship is located on
         self.previous_cell = cell  # Previous cell ship was located on
