@@ -17,6 +17,7 @@ from constants import PLAYER_MOVE
 from load_asset import AssetPreloader
 from logic import BaseShip
 from logic import Enemy
+from logic import GameLoop
 from logic import Grid
 from logic import Player
 from sprites import EnemySprite
@@ -71,6 +72,7 @@ class Game(object):
             self.asset_preloader.load()
 
         self.all_groups = pygame.sprite.Group()
+        self.game_loop = GameLoop(self)
 
     def draw_screen(self) -> None:
         self.winstyle = 1 | OPENGL | DOUBLEBUF | RESIZABLE
@@ -107,25 +109,31 @@ class Game(object):
     def check_clicks(self, pos: Tuple[float, float]) -> None:
         # Get the cell the click occured in
         for cell_sprite in self.grid_sprite.cell_sprites:
-            if cell_sprite.cursor_on_cell(pos) and cell_sprite.is_path_cell:
+            # if cell_sprite.cursor_on_cell(pos) and cell_sprite.cell.is_path_cell:
+            if cell_sprite.cursor_on_cell(pos):
                 player = self.player_sprite.controller
                 enemy = self.enemy_sprite.controller
-                if self.grid_sprite.turn_state == PLAYER_MOVE:
-                    self.grid_sprite.turn_state = ENEMY_MOVE
-                    player.move_to_cell(cell_sprite.cell)
-                    enemy.set_reachable(self.grid_sprite.grid)
-                elif self.grid_sprite.turn_state == ENEMY_MOVE:
-                    self.grid_sprite.turn_state = PLAYER_MOVE
-                    enemy.move_to_cell(cell_sprite.cell)
+                if self.game_loop.turn_state == PLAYER_MOVE:
+                    if player.move_to_cell(cell_sprite.cell):
+                        enemy.set_reachable(self.grid_sprite.grid)
+                        self.game_loop.turn_state = ENEMY_MOVE
+                elif self.game_loop.turn_state == ENEMY_MOVE:
+                    path_cells = [
+                        c.cell
+                        for c in self.grid_sprite.cell_sprites
+                        if c.cell.is_path_cell
+                    ]
+                    enemy.move_to_cell(cell_sprite.cell, path_cells)
                     player.set_reachable(self.grid_sprite.grid)
+                    self.game_loop.turn_state = PLAYER_MOVE
 
     def undo_move(self) -> None:
         player = self.player_sprite.controller
         enemy = self.enemy_sprite.controller
-        if self.grid_sprite.turn_state == PLAYER_MOVE:
+        if self.game_loop.turn_state == PLAYER_MOVE:
             ship = enemy
             next_turn = ENEMY_MOVE
-        elif self.grid_sprite.turn_state == ENEMY_MOVE:
+        elif self.game_loop.turn_state == ENEMY_MOVE:
             ship = player  # type: ignore
             next_turn = PLAYER_MOVE
         if ship.cell == ship.previous_cell:
@@ -133,7 +141,7 @@ class Game(object):
         ship.move_to_cell(ship.previous_cell)
         ship.set_reachable(self.grid_sprite.grid)
         ship.previous_cell = ship.cell
-        self.grid_sprite.turn_state = next_turn
+        self.game_loop.turn_state = next_turn
 
     def set_fullscreen(self) -> None:
         LOGGER.info("Changing to FULLSCREEN")
@@ -156,3 +164,6 @@ class Game(object):
 
     def toggle_fullscreen(self) -> None:
         self.set_fullscreen() if not self.fullscreen else self.set_windowed()
+
+    def update(self) -> None:
+        self.game_loop.update()

@@ -24,7 +24,7 @@ def handle_input(game: Any) -> bool:
                 game.undo_move()
 
     keys = pygame.key.get_pressed()
-    game.grid_sprite.show_reachable = keys[key_con["REACHABLE"]]
+    game.game_loop.show_reachable = keys[key_con["REACHABLE"]]
 
     return True
     # joy_con = game.control_config.joystick_controls

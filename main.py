@@ -73,6 +73,7 @@ def main(winstyle: int = 0) -> None:
             if not handle_input(game):
                 return
 
+            game.update()
             game.all_groups.clear(game.screen, game.background)
             game.all_groups.update()
             # draw the scene

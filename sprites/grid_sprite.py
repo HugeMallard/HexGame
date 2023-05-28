@@ -8,18 +8,36 @@ import pygame
 from .cell_sprite import CellSprite
 from .planet_sprite import PlanetSprite
 from constants import Coord
-from constants import ENEMY_ATTACK
-from constants import ENEMY_MOVE
-from constants import PLAYER_ATTACK
-from constants import PLAYER_MOVE
 from logic import Cell
-from logic import find_path
-from logic import get_path
 from logic import Grid
 from logic import Hex
+from logic import HexMath
 
 
 LOGGER = logging.getLogger(__file__)
+
+blocked_cells = [
+    Hex(1, 0),
+    Hex(0, 1),
+    Hex(0, -1),
+    Hex(1, -1),
+    Hex(-1, 1),
+    Hex(0, 0),
+    Hex(-1, 0),
+    Hex(-1, -1),
+    Hex(-2, -1),
+    Hex(-4, -2),
+]
+
+hidden_cells = [
+    Hex(1, 0),
+    Hex(0, 1),
+    Hex(0, -1),
+    Hex(1, -1),
+    Hex(-1, 1),
+    Hex(0, 0),
+    Hex(-1, 0),
+]
 
 
 class GridSprite(pygame.sprite.Sprite):
@@ -34,6 +52,7 @@ class GridSprite(pygame.sprite.Sprite):
         self.grid = grid
         self.cell_sprites: List[CellSprite] = []
         self.cell_sprites_group = pygame.sprite.Group()
+        self.hover_cell: Optional[Cell] = None
         self.object_sprite: Optional[PlanetSprite] = None
 
         images = self.game.asset_preloader.image(
@@ -41,15 +60,13 @@ class GridSprite(pygame.sprite.Sprite):
         )
         self.images = images
         self.image_index = 0
+        self.cell_spacing = 7  # pixels
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect(center=self.grid.centre.to_pix)
 
-        self.previous_start: Optional[Cell] = None
-        self.previous_end: Optional[Cell] = None
-        self.previous_visited: Optional[List[Cell]] = None
-        self.show_reachable = False
-
-        self.turn_state: int = PLAYER_MOVE
+    def draw_centre_object(self) -> None:
+        self.object_sprite = PlanetSprite(self.game, self.grid.get_cell(Hex(0, 0)))  # type: ignore
+        self.game.all_groups.add(self.object_sprite)
 
     def draw_cells(self) -> None:
         # Draws all cells
@@ -57,89 +74,39 @@ class GridSprite(pygame.sprite.Sprite):
             return
         self.cell_sprites = []
 
-        spacing = 7
+        spacing = self.cell_spacing
         size = self.grid.cells[hash(Hex(0, 0))].size - Coord(spacing, spacing)
-        # size = self.grid.cells[hash(Hex(0, 0))].size
-
         images = self.game.asset_preloader.image("cell", size=size.to_pix)
-        moon = PlanetSprite(self.game, self.grid.get_cell(Hex(0, 0)))  # type: ignore
-        # blocked_cells = []
-        # hidden_cells = []
-        blocked_cells = [
-            Hex(1, 0),
-            Hex(0, 1),
-            Hex(0, -1),
-            Hex(1, -1),
-            Hex(-1, 1),
-            Hex(0, 0),
-            Hex(-1, 0),
-            Hex(-1, -1),
-            Hex(-2, -1),
-            Hex(-4, -2),
-        ]
 
-        hidden_cells = [
-            Hex(1, 0),
-            Hex(0, 1),
-            Hex(0, -1),
-            Hex(1, -1),
-            Hex(-1, 1),
-            Hex(0, 0),
-            Hex(-1, 0),
-        ]
         self.object_sprite = None
         for cell in self.grid.get_cells():
             cell_sprite = CellSprite(images, cell)
             if cell in blocked_cells:
                 cell_sprite.cell.is_blocked = True
+            if cell.r == 0:
+                self.draw_centre_object()
             if cell in hidden_cells:
                 cell_sprite.is_blocked = True
                 cell_sprite.is_hidden = True
                 continue
-            if cell.r == 0:
-                self.object_sprite = moon
-                self.game.all_groups.add(self.object_sprite)
             self.cell_sprites.append(cell_sprite)
             self.cell_sprites_group.add(cell_sprite)
             self.game.all_groups.add(cell_sprite)
 
     def update(self) -> None:
-        cursor_pos = pygame.mouse.get_pos()
-        hover_cell_sprite = None
-        for cell_sprite in self.cell_sprites:
-            cell_sprite.clear_statuses()
-            if cell_sprite.cursor_on_cell(cursor_pos) and not hover_cell_sprite:
-                hover_cell_sprite = cell_sprite
-                cell_sprite.is_hover_cell = True
-                continue
-
-        if self.turn_state == PLAYER_MOVE:
-            if not hasattr(self.game, "player_sprite"):
-                return
-            ship = self.game.player_sprite.controller
-        elif self.turn_state == ENEMY_MOVE:
-            if not hasattr(self.game, "enemy_sprite"):
-                return
-            ship = self.game.enemy_sprite.controller
-        else:
+        if not self.grid.num_cells:
             return
+        cursor_pos = pygame.mouse.get_pos()
+        # pix = (Coord(*cursor_pos) - self.grid.centre)
+        # size = self.grid.cells[hash(Hex(0, 0))].size
+        # hex = HexMath.to_hex(pix, size)
+        # self.hover_cell = self.grid.get_cell(hex)
 
-        start = ship.cell
-        path = []
-        reachable = ship.reachable
-
-        if hover_cell_sprite is not None:
-            end = hover_cell_sprite.cell
-            if end in reachable:
-                came_from = find_path(self.grid, start, end)
-                path = get_path(came_from, start, end)
-            self.previous_end = end
-
+        self.hover_cell = None
         for cell_sprite in self.cell_sprites:
-            if cell_sprite.cell in reachable:
-                cell_sprite.is_in_move_range = self.show_reachable
-            if cell_sprite.cell in path:
-                cell_sprite.is_path_cell = True
-                continue
-
-        self.previous_start = start
+            if cell_sprite.cursor_on_cell(cursor_pos):
+                self.hover_cell = cell_sprite.cell
+        # LOGGER.warning(f"Hover Cell: {self.hover_cell}")
+        # if test_cell:
+        #     LOGGER.warning(f"Test Cell: {test_cell.cell}")
+        # assert self.hover_cell == test_cell.cell

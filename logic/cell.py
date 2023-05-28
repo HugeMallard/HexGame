@@ -30,7 +30,19 @@ class Cell(Hex):
         self.width = w  # in pixels
         self.skew = skew
         self.grid_centre = grid_centre  # in pixels
+
+        # States for game logic
+        self.is_hover_cell = False
+        self.is_in_move_range = False
+        self.is_path_cell = False
+        self.is_blocked = False
+        self.is_hidden = False
         super().__init__(q, r)
+
+    def clear_states(self) -> None:
+        self.is_hover_cell = False
+        self.is_in_move_range = False
+        self.is_path_cell = False
 
     @property
     def centre(self) -> Coord:

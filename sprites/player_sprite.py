@@ -22,10 +22,12 @@ class PlayerSprite(pygame.sprite.Sprite):
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect(center=cell.to_pix)
 
-    def update(self) -> None:
+    def has_cell_changed(self) -> bool:
         cell = self.controller.cell
-        # if self.controller.previous_cell != cell:
         centre = Coord(*self.rect.center) - self.game.grid_sprite.grid.centre
         hex = HexMath.to_hex(centre, self.controller.cell.size)
-        if hex != cell:
-            self.rect = self.image.get_rect(center=cell.to_pix)
+        return hex != cell
+
+    def update(self) -> None:
+        if self.has_cell_changed():
+            self.rect = self.image.get_rect(center=self.controller.cell.to_pix)
