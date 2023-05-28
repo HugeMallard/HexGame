@@ -4,6 +4,7 @@ from typing import Optional
 
 from .cell import Cell
 from .hex import Hex
+from constants import Coord
 
 LOGGER = logging.getLogger(__file__)
 
@@ -116,3 +117,17 @@ class HexMath(object):
             if h == hex:
                 return h
         return None
+
+    @classmethod
+    def to_hex(cls, pix: Coord, size: Coord) -> Hex:
+        """
+        Convert a pixel coord to a hex coord
+        """
+        pix = pix
+        h = size.y
+        w = size.x
+        x = pix.x
+        y = pix.y
+        r = (4 * y) / (3 * h)
+        q = (x - (2 * y) / (3 * h)) / w
+        return cls.round(Hex(q, r))

@@ -2,6 +2,8 @@ from typing import Any
 
 import pygame
 
+from constants import Coord
+from logic import HexMath
 from logic import Player
 
 
@@ -22,6 +24,8 @@ class PlayerSprite(pygame.sprite.Sprite):
 
     def update(self) -> None:
         cell = self.controller.cell
-        if self.controller.previous_cell != cell:
+        # if self.controller.previous_cell != cell:
+        centre = Coord(*self.rect.center) - self.game.grid_sprite.grid.centre
+        hex = HexMath.to_hex(centre, self.controller.cell.size)
+        if hex != cell:
             self.rect = self.image.get_rect(center=cell.to_pix)
-            self.controller.previous_cell = cell

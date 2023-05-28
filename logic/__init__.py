@@ -1,3 +1,4 @@
+from .base_ship import BaseShip  # noqa: F401
 from .cell import Cell  # noqa: F401
 from .enemy import Enemy  # noqa: F401
 from .grid import Grid  # noqa: F401

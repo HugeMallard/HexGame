@@ -8,6 +8,10 @@ import pygame
 from .cell_sprite import CellSprite
 from .planet_sprite import PlanetSprite
 from constants import Coord
+from constants import ENEMY_ATTACK
+from constants import ENEMY_MOVE
+from constants import PLAYER_ATTACK
+from constants import PLAYER_MOVE
 from logic import Cell
 from logic import find_path
 from logic import get_path
@@ -16,12 +20,6 @@ from logic import Hex
 
 
 LOGGER = logging.getLogger(__file__)
-
-
-PLAYER_MOVE = 0
-PLAYER_ATTACK = 1
-ENEMY_MOVE = 2
-ENEMY_ATTACK = 3
 
 
 class GridSprite(pygame.sprite.Sprite):
