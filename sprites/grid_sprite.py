@@ -53,6 +53,8 @@ class GridSprite(pygame.sprite.Sprite):
         self.cell_sprites: List[CellSprite] = []
         self.cell_sprites_group = pygame.sprite.Group()
         self.hover_cell: Optional[Cell] = None
+        self.prev_hover_cell: Optional[Cell] = None
+
         self.object_sprite: Optional[PlanetSprite] = None
 
         images = self.game.asset_preloader.image(
@@ -102,7 +104,7 @@ class GridSprite(pygame.sprite.Sprite):
         # hex = HexMath.to_hex(pix, size)
         # self.hover_cell = self.grid.get_cell(hex)
 
-        self.hover_cell = None
+        # self.hover_cell = None
         for cell_sprite in self.cell_sprites:
             if cell_sprite.cursor_on_cell(cursor_pos):
                 self.hover_cell = cell_sprite.cell

@@ -1,6 +1,7 @@
 from typing import Any
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 from .cell import Cell
 from .pathfinding import find_path
@@ -40,6 +41,9 @@ class GameLoop(object):
         grid_sprite = self.game.grid_sprite
         ship = self.get_active_ship()
         hover_cell = grid_sprite.hover_cell
+        if hover_cell == grid_sprite.prev_hover_cell:
+            return
+        grid_sprite.prev_hover_cell = hover_cell
 
         start = ship.cell if ship else None
         reachable = ship.reachable if ship else []
@@ -65,6 +69,28 @@ class GameLoop(object):
                 cell.is_hover_cell = True
 
         self.previous_start = start
+
+    def check_clicks(self, pos: Tuple[float, float]) -> None:
+        game = self.game
+        for cell_sprite in game.grid_sprite.cell_sprites:
+            if cell_sprite.cursor_on_cell(pos):
+                player = game.player_sprite.controller
+                enemy = game.enemy_sprite.controller
+                if self.turn_state == PLAYER_MOVE:
+                    if player.move_to_cell(cell_sprite.cell):
+                        game.grid_sprite.prev_hover_cell = None
+                        enemy.set_reachable(game.grid_sprite.grid)
+                        self.turn_state = ENEMY_MOVE
+                elif self.turn_state == ENEMY_MOVE:
+                    path_cells = [
+                        c.cell
+                        for c in game.grid_sprite.cell_sprites
+                        if c.cell.is_path_cell
+                    ]
+                    game.grid_sprite.prev_hover_cell = None
+                    enemy.move_to_cell(cell_sprite.cell, path_cells)
+                    player.set_reachable(game.grid_sprite.grid)
+                    self.turn_state = PLAYER_MOVE
 
     def update(self) -> None:
         self.set_cell_status()

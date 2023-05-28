@@ -59,6 +59,7 @@ def main(winstyle: int = 0) -> None:
     grid.generate()
 
     player = Player(grid.get_cell(Hex(-3, -2)))  # type: ignore
+    player.movement = 5
     enemy = Enemy(grid.get_cell(Hex(4, 3)))  # type: ignore
     player.set_reachable(grid)
 

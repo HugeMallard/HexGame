@@ -108,24 +108,7 @@ class Game(object):
 
     def check_clicks(self, pos: Tuple[float, float]) -> None:
         # Get the cell the click occured in
-        for cell_sprite in self.grid_sprite.cell_sprites:
-            # if cell_sprite.cursor_on_cell(pos) and cell_sprite.cell.is_path_cell:
-            if cell_sprite.cursor_on_cell(pos):
-                player = self.player_sprite.controller
-                enemy = self.enemy_sprite.controller
-                if self.game_loop.turn_state == PLAYER_MOVE:
-                    if player.move_to_cell(cell_sprite.cell):
-                        enemy.set_reachable(self.grid_sprite.grid)
-                        self.game_loop.turn_state = ENEMY_MOVE
-                elif self.game_loop.turn_state == ENEMY_MOVE:
-                    path_cells = [
-                        c.cell
-                        for c in self.grid_sprite.cell_sprites
-                        if c.cell.is_path_cell
-                    ]
-                    enemy.move_to_cell(cell_sprite.cell, path_cells)
-                    player.set_reachable(self.grid_sprite.grid)
-                    self.game_loop.turn_state = PLAYER_MOVE
+        self.game_loop.check_clicks(pos)
 
     def undo_move(self) -> None:
         player = self.player_sprite.controller
