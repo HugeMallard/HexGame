@@ -18,6 +18,12 @@ from logic import Hex
 LOGGER = logging.getLogger(__file__)
 
 
+PLAYER_MOVE = 0
+PLAYER_ATTACK = 1
+ENEMY_MOVE = 2
+ENEMY_ATTACK = 3
+
+
 class GridSprite(pygame.sprite.Sprite):
 
     """
@@ -44,6 +50,8 @@ class GridSprite(pygame.sprite.Sprite):
         self.previous_end: Optional[Cell] = None
         self.previous_visited: Optional[List[Cell]] = None
         self.show_reachable = False
+
+        self.turn_state: int = PLAYER_MOVE
 
     def draw_cells(self) -> None:
         # Draws all cells
@@ -107,13 +115,20 @@ class GridSprite(pygame.sprite.Sprite):
                 cell_sprite.is_hover_cell = True
                 continue
 
-        if not hasattr(self.game, "ship_sprite"):
+        if self.turn_state == PLAYER_MOVE:
+            if not hasattr(self.game, "player_sprite"):
+                return
+            ship = self.game.player_sprite.controller
+        elif self.turn_state == ENEMY_MOVE:
+            if not hasattr(self.game, "enemy_sprite"):
+                return
+            ship = self.game.enemy_sprite.controller
+        else:
             return
 
-        start = self.game.ship_sprite.ship.cell
-
+        start = ship.cell
         path = []
-        reachable = self.game.ship_sprite.ship.reachable
+        reachable = ship.reachable
 
         if hover_cell_sprite is not None:
             end = hover_cell_sprite.cell

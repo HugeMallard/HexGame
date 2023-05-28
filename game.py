@@ -13,10 +13,12 @@ from constants import DEFAULT_FRAME_RATE
 from constants import DEFAULT_FULLSCREEN
 from constants import DEFAULT_RESOLUTION
 from load_asset import AssetPreloader
+from logic import Enemy
 from logic import Grid
-from logic import Ship
+from logic import Player
+from sprites import EnemySprite
 from sprites import GridSprite
-from sprites import ShipSprite
+from sprites import PlayerSprite
 from utilities import ControlConfiguration
 from utilities import setup_gl
 
@@ -91,16 +93,28 @@ class Game(object):
     def draw_cells(self) -> None:
         self.grid_sprite.draw_cells()
 
-    def draw_ship(self, ship: Ship) -> None:
-        self.ship_sprite = ShipSprite(self, ship)
-        self.all_groups.add(self.ship_sprite)
+    def draw_player(self, player: Player) -> None:
+        self.player_sprite = PlayerSprite(self, player)
+        self.all_groups.add(self.player_sprite)
+
+    def draw_enemy(self, enemy: Enemy) -> None:
+        self.enemy_sprite = EnemySprite(self, enemy)
+        self.all_groups.add(self.enemy_sprite)
 
     def check_clicks(self, pos: Tuple[float, float]) -> None:
         # Get the cell the click occured in
         for cell_sprite in self.grid_sprite.cell_sprites:
             if cell_sprite.cursor_on_cell(pos) and cell_sprite.is_path_cell:
-                self.ship_sprite.ship.move_to_cell(cell_sprite.cell)
-                self.ship_sprite.ship.set_reachable(self.grid_sprite.grid)
+                player = self.player_sprite.controller
+                enemy = self.enemy_sprite.controller
+                if self.grid_sprite.turn_state == 0:
+                    self.grid_sprite.turn_state = 2
+                    player.move_to_cell(cell_sprite.cell)
+                    enemy.set_reachable(self.grid_sprite.grid)
+                elif self.grid_sprite.turn_state == 2:
+                    self.grid_sprite.turn_state = 0
+                    enemy.move_to_cell(cell_sprite.cell)
+                    player.set_reachable(self.grid_sprite.grid)
 
     def set_fullscreen(self) -> None:
         LOGGER.info("Changing to FULLSCREEN")

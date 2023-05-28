@@ -2,19 +2,18 @@ from typing import Any
 
 import pygame
 
-from constants import Coord
-from logic import Enemy
+from logic import Player
 
 
-class EnemySprite(pygame.sprite.Sprite):
-    def __init__(self, game: Any, enemy: Enemy) -> None:
+class PlayerSprite(pygame.sprite.Sprite):
+    def __init__(self, game: Any, player: Player) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.controller = enemy
+        self.controller = player
 
         cell = self.controller.cell
         images = self.game.asset_preloader.image(
-            "enemy", size=cell.size.to_pix, rotation=120
+            "ship", size=cell.size.to_pix, rotation=240
         )
         self.images = images
         self.image_index = 0

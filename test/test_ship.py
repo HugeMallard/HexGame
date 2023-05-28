@@ -2,7 +2,7 @@ import pytest
 
 from constants import Coord
 from logic import Hex
-from logic import Ship
+from logic import Player
 
 
 @pytest.mark.parametrize(  # type: ignore
@@ -12,9 +12,9 @@ from logic import Ship
         (Hex(3, -4), Hex(4, 2)),
     ],
 )
-def test_ship_movement(cell_start, cell_end) -> None:
-    ship = Ship(cell_start)
-    ship.move_to_cell(cell_end)
+def test_player_movement(cell_start, cell_end) -> None:
+    player = Player(cell_start)
+    player.move_to_cell(cell_end)
 
-    assert ship.cell == cell_end
-    assert ship.previous_cell == cell_start
+    assert player.cell == cell_end
+    assert player.previous_cell == cell_start
