@@ -6,9 +6,10 @@ import pygame
 from constants import Coord
 from constants import DEFAULT_RESOLUTION
 from game import Game
+from logic import Enemy
 from logic import Grid
 from logic import Hex
-from logic import Ship
+from logic import Player
 from steamworks import STEAMWORKS
 from utilities import catch_error
 from utilities import draw_open_gl
@@ -57,12 +58,14 @@ def main(winstyle: int = 0) -> None:
     # grid = Grid(5, bounding_rect=size, centre=centre, skew=1)
     grid.generate()
 
-    ship = Ship(grid.get_cell(Hex(0, -2)))  # type: ignore
-    ship.set_reachable(grid)
+    player = Player(grid.get_cell(Hex(-3, -2)))  # type: ignore
+    enemy = Enemy(grid.get_cell(Hex(4, 3)))  # type: ignore
+    player.set_reachable(grid)
 
     game.draw_grid(grid)
     game.draw_cells()
-    game.draw_ship(ship)
+    game.draw_player(player)
+    game.draw_enemy(enemy)
 
     game.texID = init_open_gl(generate_tex_id=True)
     try:

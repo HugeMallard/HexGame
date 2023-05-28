@@ -3,12 +3,13 @@ import pytest
 from constants import Coord
 from constants import SQRT_3
 from logic import Cell
+from logic import HexMath
 
 
 @pytest.mark.parametrize(  # type: ignore
     "q,r,h,w,x,y",
     [
-        (0, 0, 60, 0, 0, 0),
+        (0, 0, 60, 51.96, 0, 0),
         (1, -1, 60, 51.96, 25.98, -45),
         (0, -1, 60, 51.96, -25.98, -45),
         (0, 1, 60, 51.96, 25.98, 45),
@@ -37,3 +38,7 @@ def test_cell_pixel_methods(q: int, r: int, h: int, w: int, x: int, y: int) -> N
     size_y = cell.height
     assert size.x == size_x
     assert size.y == size_y
+
+    # Check we get the same q and r back from the pixel to hex method
+    hex = HexMath.to_hex(Coord(*to_pix) - grid_centre, size)
+    assert hex == cell

@@ -26,6 +26,7 @@ images_to_load: Dict[str, str] = dict(
     cell="cell",
     intro_background="background.png",
     ship="ship",
+    enemy="enemy",
     moon="moon",
 )
 

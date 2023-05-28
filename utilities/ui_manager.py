@@ -4,7 +4,6 @@ from typing import Optional
 
 import pygame
 
-from constants import Coord
 from constants import KEY_NAV
 
 
@@ -21,6 +20,8 @@ def handle_input(game: Any) -> bool:
                 game.toggle_fullscreen()
             if event.key == key_con["MENU"]:
                 return False
+            if event.key == key_con["UNDO"]:
+                game.undo_move()
 
     keys = pygame.key.get_pressed()
     game.grid_sprite.show_reachable = keys[key_con["REACHABLE"]]

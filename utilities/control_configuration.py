@@ -36,6 +36,7 @@ class ControlConfiguration(object):
             FULLSCREEN=pygame.K_f,
             MAP=pygame.K_m,
             REACHABLE=pygame.K_r,
+            UNDO=pygame.K_z,
         ),
         mouse=dict(
             # Mouse

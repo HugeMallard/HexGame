@@ -8,6 +8,10 @@ import pygame
 from .cell_sprite import CellSprite
 from .planet_sprite import PlanetSprite
 from constants import Coord
+from constants import ENEMY_ATTACK
+from constants import ENEMY_MOVE
+from constants import PLAYER_ATTACK
+from constants import PLAYER_MOVE
 from logic import Cell
 from logic import find_path
 from logic import get_path
@@ -44,6 +48,8 @@ class GridSprite(pygame.sprite.Sprite):
         self.previous_end: Optional[Cell] = None
         self.previous_visited: Optional[List[Cell]] = None
         self.show_reachable = False
+
+        self.turn_state: int = PLAYER_MOVE
 
     def draw_cells(self) -> None:
         # Draws all cells
@@ -107,13 +113,20 @@ class GridSprite(pygame.sprite.Sprite):
                 cell_sprite.is_hover_cell = True
                 continue
 
-        if not hasattr(self.game, "ship_sprite"):
+        if self.turn_state == PLAYER_MOVE:
+            if not hasattr(self.game, "player_sprite"):
+                return
+            ship = self.game.player_sprite.controller
+        elif self.turn_state == ENEMY_MOVE:
+            if not hasattr(self.game, "enemy_sprite"):
+                return
+            ship = self.game.enemy_sprite.controller
+        else:
             return
 
-        start = self.game.ship_sprite.ship.cell
-
+        start = ship.cell
         path = []
-        reachable = self.game.ship_sprite.ship.reachable
+        reachable = ship.reachable
 
         if hover_cell_sprite is not None:
             end = hover_cell_sprite.cell
