@@ -30,6 +30,7 @@ class CellSprite(pygame.sprite.Sprite):
         self.cell = cell
         self.images = images
         self.image_index = 0
+        self.show_reachable = False
         self.image = self.images[self.image_index]
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=self.cell.to_pix)
@@ -45,7 +46,7 @@ class CellSprite(pygame.sprite.Sprite):
         cell = self.cell
         image_index = BASE
         # If it is the enemy turn don't draw any special cells
-        if cell.is_in_move_range:
+        if cell.is_in_move_range and self.show_reachable:
             image_index = IN_RANGE
         if cell.is_path_cell:
             image_index = ON_PATH

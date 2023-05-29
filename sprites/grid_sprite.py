@@ -103,6 +103,10 @@ class GridSprite(pygame.sprite.Sprite):
         #         mask_cell = cell_sprite.cell
         return self.grid.get_cell_from_pos(pos)
 
+    def set_show_reachable(self, show_reachable: bool) -> None:
+        for cell_sprite in self.cell_sprites:
+            cell_sprite.show_reachable = show_reachable
+
     def update(self) -> None:
         if not self.grid.num_cells:
             return

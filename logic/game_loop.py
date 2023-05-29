@@ -29,7 +29,6 @@ class GameLoop(object):
         self.previous_start: Optional[Cell] = None
         self.previous_end: Optional[Cell] = None
         self.previous_visited: Optional[List[Cell]] = None
-        self.show_reachable = False
 
     def get_active_ship(self) -> Optional[Any]:
         if self.turn_state == PLAYER_MOVE:
@@ -57,7 +56,7 @@ class GameLoop(object):
             if self.turn_state == ENEMY_MOVE:
                 continue
             if cell in reachable:
-                cell.is_in_move_range = self.show_reachable
+                cell.is_in_move_range = True
             if cell in path:
                 cell.is_path_cell = True
             if hover_cell == cell:
