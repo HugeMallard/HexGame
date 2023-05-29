@@ -21,16 +21,7 @@ class BaseShip(object):
         self.defs: List[Any] = []  # Store defences
         self.reachable: List[Cell] = []
 
-    def move_to_cell(self, cell: Cell, path: List[Cell] = []) -> bool:
-        if cell.is_blocked:
-            return False
-        if not cell.is_path_cell and path:
-            # If not on path move to the furthest cell away on the path
-            cell = max(path, key=lambda c: HexMath.distance(c, self.cell))
-
-        if not cell.is_path_cell:
-            return False
-
+    def move_to_cell(self, cell: Cell) -> bool:
         self.previous_cell = self.cell
         self.cell = cell
         return True

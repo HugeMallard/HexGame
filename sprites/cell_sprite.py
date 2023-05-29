@@ -44,6 +44,7 @@ class CellSprite(pygame.sprite.Sprite):
         """
         cell = self.cell
         image_index = BASE
+        # If it is the enemy turn don't draw any special cells
         if cell.is_in_move_range:
             image_index = IN_RANGE
         if cell.is_path_cell:
