@@ -107,9 +107,17 @@ class GridSprite(pygame.sprite.Sprite):
         for cell_sprite in self.cell_sprites:
             cell_sprite.show_reachable = show_reachable
 
+    def set_show_enemy_reachable(self, show_reachable: bool) -> None:
+        for cell_sprite in self.cell_sprites:
+            cell_sprite.show_enemy_reachable = show_reachable
+
     def update(self) -> None:
         if not self.grid.num_cells:
             return
         hover_cell = self.cell_under_cursor()
         if hover_cell:
             self.hover_cell = hover_cell
+        if hover_cell == self.game.enemy_sprite.controller.cell:
+            self.set_show_enemy_reachable(True)
+        else:
+            self.set_show_enemy_reachable(False)

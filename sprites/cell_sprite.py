@@ -14,6 +14,7 @@ ON_PATH = 2
 BLOCKED = 3
 IN_RANGE = 4
 MOVE_CELL = 5
+ENEMY_REACHABLE = 6
 
 
 LOGGER = logging.getLogger(__file__)
@@ -31,6 +32,7 @@ class CellSprite(pygame.sprite.Sprite):
         self.images = images
         self.image_index = 0
         self.show_reachable = False
+        self.show_enemy_reachable = False
         self.image = self.images[self.image_index]
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=self.cell.to_pix)
@@ -46,8 +48,11 @@ class CellSprite(pygame.sprite.Sprite):
         cell = self.cell
         image_index = BASE
         # If it is the enemy turn don't draw any special cells
-        if cell.is_in_move_range and self.show_reachable:
-            image_index = IN_RANGE
+        if cell.is_in_move_range:
+            if self.show_reachable:
+                image_index = IN_RANGE
+            if self.show_enemy_reachable:
+                image_index = ENEMY_REACHABLE
         if cell.is_path_cell:
             image_index = ON_PATH
         if cell.is_hover_cell:
