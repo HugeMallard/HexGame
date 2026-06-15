@@ -4,31 +4,49 @@ A hex-based game built with PyGame and OpenGL.
 
 ## Setup
 
-1. Install Poetry: https://python-poetry.org/docs/
-2. From the repository root, run:
+1. Install uv: https://github.com/uv/uv or install with pip:
 
    ```sh
-   poetry install
+   python -m pip install --user uv
    ```
 
-3. Run the game with:
+2. From the repository root, install dependencies:
 
    ```sh
-   poetry run python main.py
+   uv install
+   ```
+
+3. Install the git hooks:
+
+   ```sh
+   uv run pre-commit install
+   ```
+
+4. Run pre-commit manually across all files:
+
+   ```sh
+   uv run pre-commit run --all-files
+   ```
+
+5. Run the test suite:
+
+   ```sh
+   uv run pytest
+   ```
+
+6. Run the game with:
+
+   ```sh
+   uv run python main.py
    ```
 
    or
 
    ```sh
-   poetry run hexgame
+   uv run hexgame
    ```
 
 ## Notes
 
-- Dependency management has moved to Poetry via `pyproject.toml`.
+- Dependency management has moved to `uv` via `pyproject.toml`.
 - `pip install -r requirements.txt` is deprecated for this repository.
-- To export a pip-compatible requirements file from Poetry if needed:
-
-  ```sh
-  poetry export -f requirements.txt --output requirements.txt --without-hashes
-  ```

@@ -30,6 +30,7 @@ dependencies = [
     "pre-commit==4.6.0",
     "pygame-ce==2.5.7",
     "pyopengl==3.1.10",
+    "pytest>=9.1.0",
     "pyyaml==6.0.3",
     "reorder-python-imports==3.16.0",
     "requests==2.34.2",
