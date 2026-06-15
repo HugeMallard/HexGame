@@ -12,7 +12,7 @@ def resize_image_by_scale(img: Image, scale_ratio: float = 1.5) -> Image:
     y = int(image.height * scale_ratio)
     if img.get_width() == x and img.get_height() == y:
         return img
-    image = image.resize((x, y), Image.ANTIALIAS)
+    image = image.resize((x, y), Image.LANCZOS)
     return pygame.image.fromstring(
         image.tobytes("raw", "RGBA"), image.size, "RGBA"
     ).convert_alpha()
@@ -23,7 +23,7 @@ def resize_image(img: Image, size: Tuple[int, int]) -> Image:
         return img
     image_string = pygame.image.tostring(img, "RGBA", False)
     image = Image.frombytes("RGBA", img.get_size(), image_string)
-    image = image.resize(size, Image.ANTIALIAS)
+    image = image.resize(size, Image.LANCZOS)
     return pygame.image.fromstring(
         image.tobytes("raw", "RGBA"), image.size, "RGBA"
     ).convert_alpha()

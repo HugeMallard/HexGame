@@ -1,4 +1,40 @@
-[tool.pytest.ini_options]
-pythonpath = [
-  "."
+[project]
+name = "hexgame"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "black==26.5.1",
+    "certifi==2026.5.20",
+    "cfgv==3.5.0",
+    "charset-normalizer==3.4.7",
+    "classify-imports==4.2.0",
+    "click==8.4.1",
+    "colorama==0.4.6",
+    "distlib==0.4.3",
+    "docopt==0.6.2",
+    "filelock==3.29.4",
+    "identify==2.6.19",
+    "idna==3.18",
+    "mypy==2.1.0",
+    "mypy-extensions==1.1.0",
+    "nodeenv==1.10.0",
+    "nuitka==4.1.2",
+    "numpy==2.4.6",
+    "ordered-set==4.1.0",
+    "packaging==26.2",
+    "pathspec==1.1.1",
+    "pillow==12.2.0",
+    "platformdirs==4.10.0",
+    "pre-commit==4.6.0",
+    "pygame-ce==2.5.7",
+    "pyopengl==3.1.10",
+    "pyyaml==6.0.3",
+    "reorder-python-imports==3.16.0",
+    "requests==2.34.2",
+    "urllib3==2.7.0",
+    "virtualenv==21.5.0",
+    "yarg==0.1.10",
+    "zstandard==0.25.0",
 ]
