@@ -13,7 +13,7 @@ A hex-based game built with PyGame and OpenGL.
 2. From the repository root, install dependencies:
 
    ```sh
-   uv install
+   uv sync --all-groups
    ```
 
 3. Install the git hooks:
@@ -45,8 +45,3 @@ A hex-based game built with PyGame and OpenGL.
    ```sh
    uv run hexgame
    ```
-
-## Notes
-
-- Dependency management has moved to `uv` via `pyproject.toml`.
-- `pip install -r requirements.txt` is deprecated for this repository.
