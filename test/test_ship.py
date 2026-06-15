@@ -1,8 +1,8 @@
 import pytest
 
-from constants import Coord
 from logic import Hex
 from logic import Player
+from logic.cell import Cell
 
 
 @pytest.mark.parametrize(  # type: ignore
@@ -12,7 +12,7 @@ from logic import Player
         (Hex(3, -4), Hex(4, 2)),
     ],
 )
-def test_player_movement(cell_start, cell_end) -> None:
+def test_player_movement(cell_start: Cell, cell_end: Cell) -> None:
     player = Player(cell_start)
     player.move_to_cell(cell_end)
 
