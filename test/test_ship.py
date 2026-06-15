@@ -1,6 +1,5 @@
 import pytest
 
-from constants import Coord
 from logic import Hex
 from logic import Player
 from logic.cell import Cell
