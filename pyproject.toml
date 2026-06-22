@@ -35,7 +35,7 @@ dependencies = [
     "reorder-python-imports==3.16.0",
     "requests==2.34.2",
     "urllib3==2.7.0",
-    "virtualenv==21.5.0",
+    "virtualenv==21.5.1",
     "yarg==0.1.10",
     "zstandard==0.25.0",
 ]
