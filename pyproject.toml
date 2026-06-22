@@ -21,7 +21,7 @@ dependencies = [
     "mypy-extensions==1.1.0",
     "nodeenv==1.10.0",
     "nuitka==4.1.2",
-    "numpy==2.4.6",
+    "numpy==2.5.0",
     "ordered-set==4.1.0",
     "packaging==26.2",
     "pathspec==1.1.1",
